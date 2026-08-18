@@ -1,0 +1,21 @@
+CREATE DATABASE IF NOT EXISTS inmobiliaria;
+USE inmobiliaria;
+
+CREATE TABLE IF NOT EXISTS Propietarios (
+    IdPropietario INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50) NOT NULL,
+    Apellido VARCHAR(50) NOT NULL,
+    Dni VARCHAR(20) NOT NULL,
+    Telefono VARCHAR(20),
+    Email VARCHAR(100) NOT NULL,
+    Clave VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS Inquilinos (
+    IdInquilino INT AUTO_INCREMENT PRIMARY KEY,
+    Dni VARCHAR(20) NOT NULL,
+    Nombre VARCHAR(50) NOT NULL,
+    Apellido VARCHAR(50) NOT NULL,
+    Telefono VARCHAR(20),
+    Email VARCHAR(100) NOT NULL
+);
