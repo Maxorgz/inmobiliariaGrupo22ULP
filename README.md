@@ -9,7 +9,7 @@
 ## 📐 Modelado de Datos
 A continuación se presenta el esquema del modelo de datos correspondiente a la aplicación:
 ### Diagrama Entidad-Relación (DER) / Diagrama de Clases
-![Diagrama del Proyecto](./path/o/url/al/diagrama.png)
+![Diagrama del Proyecto](./diagrama/inmobiliariagrupo22.png)
 > **Nota:** Puedes adjuntar la imagen en el repositorio (por ejemplo, en una carpeta `/docs` o `/img`) y enlazarla como se muestra arriba, o pegar directamente un diagrama generado en Mermaid.
 <details>
 <summary>Ver diagrama en código Mermaid (Opcional)</summary>
