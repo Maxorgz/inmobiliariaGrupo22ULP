@@ -5,16 +5,16 @@ namespace InmobiliariaWeb.Controllers
 {
     public class PropietarioController : Controller
     {
-        private readonly DataContext _context;
+        private readonly RepositorioPropietario _repoPropietario;
 
-        public PropietarioController(DataContext context)
+        public PropietarioController(IConfiguration configuration)
         {
-            _context = context;
+            _repoPropietario = new RepositorioPropietario(configuration);
         }
 
         public IActionResult Index()
         {
-            var lista = _context.Propietarios.ToList();
+            var lista = _repoPropietario.ObtenerTodos();
             return View(lista);
         }
 
@@ -28,8 +28,7 @@ namespace InmobiliariaWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Propietarios.Add(p);
-                _context.SaveChanges();
+                _repoPropietario.Alta(p);
                 return RedirectToAction("Index");
             }
             return View(p);
