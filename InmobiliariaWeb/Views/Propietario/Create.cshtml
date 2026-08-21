@@ -1,0 +1,70 @@
+@model InmobiliariaWeb.Models.Propietario
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h2 class="mb-0 text-secondary">Nuevo Propietario</h2>
+            </div>
+            
+            <div class="card-body p-4">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <!-- Nombre y Apellido -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Nombre" class="form-label text-secondary">Nombre</label>
+                            <input asp-for="Nombre" class="form-control" placeholder="Ej: Juan" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Apellido" class="form-label text-secondary">Apellido</label>
+                            <input asp-for="Apellido" class="form-control" placeholder="Ej: Pérez" />
+                            <span asp-validation-for="Apellido" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- DNI y Tel -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Dni" class="form-label text-secondary">DNI</label>
+                            <input asp-for="Dni" class="form-control" />
+                            <span asp-validation-for="Dni" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Telefono" class="form-label text-secondary">Telefono</label>
+                            <input asp-for="Telefono" class="form-control" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Email y Clave -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label text-secondary">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="correo@ejemplo.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Clave" class="form-label text-secondary">Contraseña</label>
+                            <input asp-for="Clave" type="password" class="form-control" placeholder="******" />
+                            <span asp-validation-for="Clave" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-between mt-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar y Volver</a>
+                        <button type="submit" class="btn btn-primary px-4">Guardar Propietario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

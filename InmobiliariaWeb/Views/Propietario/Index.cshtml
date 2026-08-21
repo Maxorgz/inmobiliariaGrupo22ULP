@@ -1,20 +1,41 @@
 @model IEnumerable<InmobiliariaWeb.Models.Propietario>
 
-<h2>Lista de Propietarios</h2>
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h2 class="mb-0 text-secondary">Lista de Propietarios</h2>
+        <a asp-action="Create" class="btn btn-primary px-4">
+            + Nuevo Propietario
+        </a>
+    </div>
 
-<a asp-action="Create">Nuevo Propietario</a>
-
-<table class="table">
-    <tr>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>DNI</th>
-    </tr>
-    @foreach (var item in Model) {
-    <tr>
-        <td>@item.Nombre</td>
-        <td>@item.Apellido</td>
-        <td>@item.Dni</td>
-    </tr>
-    }
-</table>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light text-secondary">
+                <tr>
+                    <th class="ps-4">Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                    <th class="text-center pe-4">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                <tr>
+                    <td class="ps-4">@item.Nombre</td>
+                    <td>@item.Apellido</td>
+                    <td>@item.Dni</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.Email</td>
+                    
+                    <td class="text-center pe-4">
+                        <a asp-action="Edit" asp-route-id="@item.IdPropietario" class="btn btn-outline-secondary btn-sm me-1">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdPropietario" class="btn btn-outline-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
