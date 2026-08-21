@@ -1,4 +1,4 @@
-using mySqlConnector;
+using MySqlConnector;
 
 namespace InmobiliariaWeb.Models
 {
@@ -8,7 +8,7 @@ namespace InmobiliariaWeb.Models
 
         protected RepositorioBase(IConfiguration configuration)
         {
-            connectionString = configuration.getConnectionString("DefaultConnection") ??"";
+            connectionString = configuration.GetConnectionString("DefaultConnection") ??"";
         }
     }
 }
