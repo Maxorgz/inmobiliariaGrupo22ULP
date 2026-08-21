@@ -2,7 +2,7 @@ using MySqlConnector;
 
 namespace InmobiliariaWeb.Models
 {
-    public class RepositorioInquilino : RepositorioBase
+    public class RepositorioInquilino : RepositorioBase, IRepositorioInquilino
     {
         public RepositorioInquilino(IConfiguration configuration) : base(configuration) { }
 

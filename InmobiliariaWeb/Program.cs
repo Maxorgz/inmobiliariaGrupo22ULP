@@ -8,6 +8,8 @@ var connectionString = builder.Configuration.GetConnectionString("MySqlConn");
 // builder.Services.AddDbContext<DataContext>(options => ...); // Comentado temporalmente si usan otro conector
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IRepositorioInquilino, RepositorioInquilino>();
+builder.Services.AddScoped<IRepositorioPropietario, RepositorioPropietario>();
 
 var app = builder.Build();
 
