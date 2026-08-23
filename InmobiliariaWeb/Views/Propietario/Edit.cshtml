@@ -2,18 +2,17 @@
 
 <div class="row justify-content-center mt-4">
     <div class="col-md-8">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
-                <h2 class="mb-0 text-secondary">Editar Propietario</h2>
+        <div class="card shadow-sm border-success">
+            <div class="card-header bg-success text-white py-3">
+                <h2 class="mb-0 fs-4">Editar Propietario</h2>
             </div>
             
             <div class="card-body p-4">
-                <form asp-action="Edit">
+                <form asp-action="Edit" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <input type="hidden" asp-for="IdPropietario" />
 
-                    <!-- Nombre y Apellido -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label asp-for="Nombre" class="form-label text-secondary">Nombre</label>
@@ -57,7 +56,7 @@
                     </div>
 
                     <!-- Btn-->
-                    <div class="d-flex justify-content-between mt-2">
+                    <div class="d-flex justify-content-between mt-2 pt-3 border-top">
                         <a asp-action="Index" class="btn btn-outline-secondary">Cancelar y Volver</a>
                         <button type="submit" class="btn btn-success px-4">Guardar Cambios</button>
                     </div>
@@ -66,3 +65,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -10,7 +10,7 @@ namespace InmobiliariaWeb.Models
         {
             var lista = new List<Propietario>();
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietarios";
+            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietario";
             using var command = new MySqlCommand(sql, connection);
             connection.Open();
             using var reader = command.ExecuteReader();
@@ -33,7 +33,7 @@ namespace InmobiliariaWeb.Models
         {
             Propietario? p = null;
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietarios WHERE IdPropietario = @id";
+            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietario WHERE IdPropietario = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
             connection.Open();
@@ -56,7 +56,7 @@ namespace InmobiliariaWeb.Models
         public int Alta(Propietario p)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = @"INSERT INTO Propietarios (Nombre, Apellido, Dni, Telefono, Email, Clave)
+            var sql = @"INSERT INTO Propietario (Nombre, Apellido, Dni, Telefono, Email, Clave)
                         VALUES (@nombre, @apellido, @dni, @telefono, @email, @clave);
                         SELECT LAST_INSERT_ID();";
             using var command = new MySqlCommand(sql, connection);
@@ -74,7 +74,7 @@ namespace InmobiliariaWeb.Models
         public int Modificacion(Propietario p)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = @"UPDATE Propietarios SET Nombre = @nombre, Apellido = @apellido, Dni = @dni,
+            var sql = @"UPDATE Propietario SET Nombre = @nombre, Apellido = @apellido, Dni = @dni,
                         Telefono = @telefono, Email = @email WHERE IdPropietario = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@nombre", p.Nombre);
@@ -90,7 +90,7 @@ namespace InmobiliariaWeb.Models
         public int Baja(int id)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = "DELETE FROM Propietarios WHERE IdPropietario = @id";
+            var sql = "DELETE FROM Propietario WHERE IdPropietario = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
             connection.Open();

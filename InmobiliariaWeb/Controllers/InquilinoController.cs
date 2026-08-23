@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-//using Microsoft.Extensions.Configuration;
 using InmobiliariaWeb.Models; 
 
 namespace InmobiliariaWeb.Controllers
@@ -25,14 +24,62 @@ namespace InmobiliariaWeb.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Inquilino inquilino)
         {
             if (ModelState.IsValid)
             {
                 _repoInquilino.Alta(inquilino); 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             return View(inquilino);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var inquilino = _repoInquilino.ObtenerPorId(id);
+            if (inquilino == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(inquilino);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Inquilino inquilino)
+        {
+            if (ModelState.IsValid)
+            {
+                _repoInquilino.Modificacion(inquilino);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(inquilino);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var inquilino = _repoInquilino.ObtenerPorId(id);
+            if (inquilino == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(inquilino);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmado(int IdInquilino) // ¡Importante que se llame igual que tu ID!
+        {
+            try
+            {
+                _repoInquilino.Baja(IdInquilino);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

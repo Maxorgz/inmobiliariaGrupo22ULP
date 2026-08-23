@@ -2,13 +2,13 @@
 
 <div class="row justify-content-center mt-4">
     <div class="col-md-8">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
-                <h2 class="mb-0 text-secondary">Nuevo Propietario</h2>
+        <div class="card shadow-sm border-primary">
+            <div class="card-header bg-primary text-white py-3">
+                <h2 class="mb-0 fs-4">Nuevo Propietario</h2>
             </div>
             
             <div class="card-body p-4">
-                <form asp-action="Create">
+                <form asp-action="Create" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <!-- Nombre y Apellido -->
@@ -20,7 +20,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label asp-for="Apellido" class="form-label text-secondary">Apellido</label>
-                            <input asp-for="Apellido" class="form-control" placeholder="Ej: Pérez" />
+                            <input asp-for="Apellido" class="form-control" placeholder="Ej: Gonzales" />
                             <span asp-validation-for="Apellido" class="text-danger"></span>
                         </div>
                     </div>

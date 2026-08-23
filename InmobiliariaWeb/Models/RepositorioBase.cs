@@ -8,7 +8,7 @@ namespace InmobiliariaWeb.Models
 
         protected RepositorioBase(IConfiguration configuration)
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection") ??"";
+            connectionString = "Server=127.0.0.1;Database=inmobiliariagrupo22;Uid=root;Pwd=admin123;";
         }
     }
 }

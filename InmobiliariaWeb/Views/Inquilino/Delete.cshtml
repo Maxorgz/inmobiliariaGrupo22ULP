@@ -1,63 +1,38 @@
 @model InmobiliariaWeb.Models.Inquilino
 
 <div class="row justify-content-center mt-4">
-    <div class="col-md-8">
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
-                <h2 class="mb-0 text-secondary">Editar Inquilino</h2>
+    <div class="col-md-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white py-3">
+                <h2 class="mb-0 fs-4">Eliminar Inquilino</h2>
             </div>
             
             <div class="card-body p-4">
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                    
+                <h5 class="text-danger mb-4">¿Estas seguro de eliminar este inquilino?</h5>
+                
+                <dl class="row">
+                    <dt class="col-sm-4 text-secondary">Nombre y Apellido</dt>
+                    <dd class="col-sm-8 fw-bold">@Model.Nombre @Model.Apellido</dd>
+
+                    <dt class="col-sm-4 text-secondary">DNI</dt>
+                    <dd class="col-sm-8">@Model.Dni</dd>
+
+                    <dt class="col-sm-4 text-secondary">Teléfono</dt>
+                    <dd class="col-sm-8">@(Model.Telefono ?? "Sin registrar")</dd>
+
+                    <dt class="col-sm-4 text-secondary">Email</dt>
+                    <dd class="col-sm-8">@Model.Email</dd>
+                </dl>
+
+                <form asp-action="Delete" class="mt-4">
                     <input type="hidden" asp-for="IdInquilino" />
-
-                    <!-- Fila 1: Nombre y Apellido -->
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Nombre" class="form-label text-secondary">Nombre</label>
-                            <input asp-for="Nombre" class="form-control" />
-                            <span asp-validation-for="Nombre" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Apellido" class="form-label text-secondary">Apellido</label>
-                            <input asp-for="Apellido" class="form-control" />
-                            <span asp-validation-for="Apellido" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Dni" class="form-label text-secondary">DNI</label>
-                            <input asp-for="Dni" class="form-control" />
-                            <span asp-validation-for="Dni" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Telefono" class="form-label text-secondary">Telefono</label>
-                            <input asp-for="Telefono" class="form-control" />
-                            <span asp-validation-for="Telefono" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 mb-4">
-                            <label asp-for="Email" class="form-label text-secondary">Email</label>
-                            <input asp-for="Email" type="email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-2">
+                    
+                    <div class="d-flex justify-content-between">
                         <a asp-action="Index" class="btn btn-outline-secondary">Cancelar y Volver</a>
-                        <button type="submit" class="btn btn-success px-4">Guardar Cambios</button>
+                        <button type="submit" class="btn btn-danger px-4">Si, Eliminar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
