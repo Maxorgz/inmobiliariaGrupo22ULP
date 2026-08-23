@@ -69,7 +69,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmado(int IdInquilino) // ¡Importante que se llame igual que tu ID!
+        public IActionResult DeleteConfirmado(int IdInquilino)
         {
             try
             {

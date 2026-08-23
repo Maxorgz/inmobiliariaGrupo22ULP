@@ -1,4 +1,5 @@
 using MySqlConnector;
+using Microsoft.Extensions.Configuration;
 
 namespace InmobiliariaWeb.Models
 {
