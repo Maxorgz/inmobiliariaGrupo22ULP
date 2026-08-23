@@ -5,4 +5,57 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="container mt-4">
+    
+    <div class="p-5 text-center bg-white rounded-3 shadow-sm mb-5">
+        <h1 class="display-4 fw-bold text-primary">Inmobiliaria Grupo 22</h1>
+        <p class="lead text-secondary mt-3">Sistema de gestión integral de alquileres y propiedades.</p>
+        <hr class="mx-auto w-25 my-4 text-muted">
+        <p class="text-muted">Presiona un Item para cargar datos</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        
+        <div class="col-md-5">
+            <div class="card h-100 shadow-sm border-0 transition-hover">
+                <div class="card-body text-center p-4 d-flex flex-column">
+                    <div class="display-4 mb-3">🏢</div>
+                    <h3 class="card-title text-dark">Propietarios</h3>
+                    <p class="card-text text-secondary mb-4">
+                        Administrá el registro de los dueños, sus datos de contacto y la información personal.
+                    </p>
+                    <a asp-controller="Propietario" asp-action="Index" class="btn btn-outline-primary mt-auto px-4">
+                        Ir a Propietarios
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card h-100 shadow-sm border-0 transition-hover">
+                <div class="card-body text-center p-4 d-flex flex-column">
+                    <div class="display-4 mb-3">👥</div>
+                    <h3 class="card-title text-dark">Inquilinos</h3>
+                    <p class="card-text text-secondary mb-4">
+                        Gestioná el listado de locatarios, teléfonos de contacto y direcciones de correo.
+                    </p>
+                    <a asp-controller="Inquilino" asp-action="Index" class="btn btn-outline-primary mt-auto px-4">
+                        Ir a Inquilinos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
