@@ -261,7 +261,6 @@ paket-files/
 __pycache__/
 *.pyc
 .vscode/*
-InmobiliariaWeb/appsettings.json
 InmobiliariaWeb/obj/Debug/net10.0/InmobiliariaWeb.AssemblyInfo.cs
 InmobiliariaWeb/obj/Debug/net10.0/InmobiliariaWeb.AssemblyInfoInputs.cache
 InmobiliariaWeb/obj/Debug/net10.0/InmobiliariaWeb.assets.cache
