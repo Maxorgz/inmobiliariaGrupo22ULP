@@ -65,7 +65,7 @@ namespace InmobiliariaWeb.Models
             command.Parameters.AddWithValue("@dni", p.Dni);
             command.Parameters.AddWithValue("@telefono", (object?)p.Telefono ?? DBNull.Value);
             command.Parameters.AddWithValue("@email", p.Email);
-            command.Parameters.AddWithValue("@clave", (object?)p.Clave ?? DBNull.Value);
+            command.Parameters.AddWithValue("@clave", p.Clave);
             connection.Open();
             p.IdPropietario = Convert.ToInt32(command.ExecuteScalar());
             return p.IdPropietario;
@@ -75,7 +75,7 @@ namespace InmobiliariaWeb.Models
         {
             using var connection = new MySqlConnection(connectionString);
             var sql = @"UPDATE Propietario SET Nombre = @nombre, Apellido = @apellido, Dni = @dni,
-                        Telefono = @telefono, Email = @email WHERE IdPropietario = @id";
+                        Telefono = @telefono, Email = @email, Clave = @clave WHERE IdPropietario = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@nombre", p.Nombre);
             command.Parameters.AddWithValue("@apellido", p.Apellido);
@@ -83,6 +83,7 @@ namespace InmobiliariaWeb.Models
             command.Parameters.AddWithValue("@telefono", (object?)p.Telefono ?? DBNull.Value);
             command.Parameters.AddWithValue("@email", p.Email);
             command.Parameters.AddWithValue("@id", p.IdPropietario);
+            command.Parameters.AddWithValue("@clave", p.Clave);
             connection.Open();
             return command.ExecuteNonQuery();
         }
