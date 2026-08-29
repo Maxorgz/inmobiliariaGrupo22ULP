@@ -3,7 +3,6 @@ using InmobiliariaWeb.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de la base de datos (ajústala según lo que usen tus compañeros)
 var connectionString = builder.Configuration.GetConnectionString("MySqlConn");
 // builder.Services.AddDbContext<DataContext>(options => ...); // Comentado temporalmente si usan otro conector
 

@@ -10,7 +10,8 @@ namespace InmobiliariaWeb.Models
         [Required(ErrorMessage = "El DNI es obligatorio")]
         public string Dni { get; set; } = "";
         
-        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        [RegularExpression(@"^[A-Za-z]{2,15}$", ErrorMessage = "El nombre debe tener entre 2 y 15 caracteres.")]
         public string Nombre { get; set; } = "";
         
         [Required(ErrorMessage = "El apellido es obligatorio")]
