@@ -31,7 +31,7 @@ namespace InmobiliariaWeb.Models
 
         [Required(ErrorMessage = "El porcentaje de seña es obligatorio")]
         [Range(0, 100, ErrorMessage = "El porcentaje debe estar entre 0 y 100")]
-        public decimal PorcentajeSenia { get; set; }
+        public decimal PorcentajeReserva { get; set; }
 
         public string? ImagenPortada { get; set; }
 
@@ -42,6 +42,5 @@ namespace InmobiliariaWeb.Models
 
         public bool Disponible { get; set; } = true;
 
-        public bool IsActive { get; set; } = true;
     }
 }

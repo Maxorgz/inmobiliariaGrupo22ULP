@@ -10,6 +10,5 @@ namespace InmobiliariaWeb.Models
         [StringLength(50, ErrorMessage = "La descripción no puede superar los 50 caracteres")]
         public string Descripcion { get; set; } = "";
 
-        public bool IsActive { get; set; } = true;
     }
 }
