@@ -30,5 +30,7 @@ namespace InmobiliariaWeb.Models
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
         [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d).{8,50}$", ErrorMessage = "La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra y un num.")]
         public string Clave { get; set; } = "";
+
+        public bool IsActive{ get; set; } = true;
     }
 }

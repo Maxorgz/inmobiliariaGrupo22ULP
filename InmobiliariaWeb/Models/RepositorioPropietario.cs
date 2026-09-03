@@ -10,7 +10,7 @@ namespace InmobiliariaWeb.Models
         {
             var lista = new List<Propietario>();
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietario";
+            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, IsActive FROM Propietario";
             using var command = new MySqlCommand(sql, connection);
             connection.Open();
             using var reader = command.ExecuteReader();
@@ -24,6 +24,7 @@ namespace InmobiliariaWeb.Models
                     Dni = reader.GetString("Dni"),
                     Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString("Telefono"),
                     Email = reader.GetString("Email"),
+                    IsActive = reader.GetBoolean("IsActive"),
                 });
             }
             return lista;
@@ -33,7 +34,7 @@ namespace InmobiliariaWeb.Models
         {
             Propietario? p = null;
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietario WHERE IdPropietario = @id";
+            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email FROM Propietario WHERE IdPropietario = @id AND IsActive = 1";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
             connection.Open();
@@ -91,7 +92,7 @@ namespace InmobiliariaWeb.Models
         public int Baja(int id)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = "DELETE FROM Propietario WHERE IdPropietario = @id";
+            var sql = "UPDATE Propietario SET IsActive = 0 WHERE IdPropietario = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
             connection.Open();

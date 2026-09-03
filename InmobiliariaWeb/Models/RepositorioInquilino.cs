@@ -11,7 +11,7 @@ namespace InmobiliariaWeb.Models
         {
             var lista = new List<Inquilino>();
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdInquilino, Dni, Nombre, Apellido, Telefono, Email FROM Inquilino";
+            var sql = "SELECT IdInquilino, Dni, Nombre, Apellido, Telefono, Email, IsActive FROM Inquilino";
             using var command = new MySqlCommand(sql, connection);
             connection.Open();
             using var reader = command.ExecuteReader();
@@ -25,6 +25,7 @@ namespace InmobiliariaWeb.Models
                     Apellido = reader.GetString("Apellido"),
                     Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString("Telefono"),
                     Email = reader.GetString("Email"),
+                    IsActive = reader.GetBoolean("IsActive"), 
                 });
             }
             return lista;
@@ -34,7 +35,7 @@ namespace InmobiliariaWeb.Models
         {
             Inquilino? inquilino = null;
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdInquilino, Dni, Nombre, Apellido, Telefono, Email FROM Inquilino WHERE IdInquilino = @id";
+            var sql = "SELECT IdInquilino, Dni, Nombre, Apellido, Telefono, Email FROM Inquilino WHERE IdInquilino = @id AND IsActive = 1";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
             connection.Open();
@@ -90,7 +91,7 @@ namespace InmobiliariaWeb.Models
         public int Baja(int id)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = "DELETE FROM Inquilino WHERE IdInquilino = @id";
+            var sql = "UPDATE Inquilino SET IsActive = 0 WHERE IdPropietario = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
             connection.Open();

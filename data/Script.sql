@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS Propietario (
     Dni VARCHAR(20) NOT NULL,
     Telefono VARCHAR(20),
     Email VARCHAR(100) NOT NULL,
-    Clave VARCHAR(255)
+    Clave VARCHAR(255),
+    IsActive BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE IF NOT EXISTS Inquilino (
@@ -17,5 +18,6 @@ CREATE TABLE IF NOT EXISTS Inquilino (
     Nombre VARCHAR(50) NOT NULL,
     Apellido VARCHAR(50) NOT NULL,
     Telefono VARCHAR(20),
-    Email VARCHAR(100) NOT NULL
+    Email VARCHAR(100) NOT NULL,
+    IsActive BOOLEAN DEFAULT TRUE
 );

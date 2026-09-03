@@ -25,5 +25,7 @@ namespace InmobiliariaWeb.Models
         [Required(ErrorMessage = "El email es obligatorio")]
         [EmailAddress(ErrorMessage = "Formato de email inválido")]
         public string Email { get; set; } = "";
+
+        public bool IsActive{ get; set; } = true;
     }
 }
