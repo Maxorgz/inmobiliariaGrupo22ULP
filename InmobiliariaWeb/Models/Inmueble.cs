@@ -33,7 +33,7 @@ namespace InmobiliariaWeb.Models
         [Range(0, 100, ErrorMessage = "El porcentaje debe estar entre 0 y 100")]
         public decimal PorcentajeReserva { get; set; }
 
-        public string? ImagenPortada { get; set; }
+        //public string? ImagenPortada { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un propietario")]
         public int IdPropietario { get; set; }
