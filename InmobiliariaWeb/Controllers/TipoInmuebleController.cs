@@ -3,22 +3,14 @@ using InmobiliariaWeb.Models;
 
 namespace InmobiliariaWeb.Controllers
 {
-    public class InmuebleController : Controller
+    public class TipoInmuebleController : Controller
     {
-        private readonly IRepositorioInmueble repositorio;
-        private readonly IRepositorioTipoInmueble repoTipo;
-        private readonly IRepositorioPropietario repoPropietario;
-        private readonly ILogger<InmuebleController> logger;
+        private readonly IRepositorioTipoInmueble repositorio;
+        private readonly ILogger<TipoInmuebleController> logger;
 
-        public InmuebleController(
-            IRepositorioInmueble repo,
-            IRepositorioTipoInmueble repoTipo,
-            IRepositorioPropietario repoPropietario,
-            ILogger<InmuebleController> logger)
+        public TipoInmuebleController(IRepositorioTipoInmueble repo, ILogger<TipoInmuebleController> logger)
         {
             this.repositorio = repo;
-            this.repoTipo = repoTipo;
-            this.repoPropietario = repoPropietario;
             this.logger = logger;
         }
 
@@ -49,18 +41,18 @@ namespace InmobiliariaWeb.Controllers
             return View(entidad);
         }
 
-        [Route("[controller]/BuscarTipo/{q}", Name = "BuscarTipoParaInmueble")]
-        public IActionResult BuscarTipo(string q)
+        [Route("[controller]/Buscar/{q}", Name = "BuscarTipoInmueble")]
+        public IActionResult Buscar(string q)
         {
-            var res = repoTipo.BuscarPorDescripcion(q);
-            return Json(new { Datos = res });
-        }
-
-        [Route("[controller]/BuscarPropietario/{q}", Name = "BuscarPropietarioParaInmueble")]
-        public IActionResult BuscarPropietario(string q)
-        {
-            var res = repoPropietario.BuscarPorNombre(q);
-            return Json(new { Datos = res });
+            try
+            {
+                var res = repositorio.BuscarPorDescripcion(q);
+                return Json(new { Datos = res });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Error = ex.Message });
+            }
         }
 
         public ActionResult Create()
@@ -70,13 +62,13 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Inmueble entidad)
+        public ActionResult Create(TipoInmueble entidad)
         {
             try
             {
                 if (!ModelState.IsValid) return View(entidad);
                 repositorio.Alta(entidad);
-                TempData["Mensaje"] = "Inmueble creado correctamente";
+                TempData["Mensaje"] = "Tipo de inmueble creado correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -96,23 +88,16 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Inmueble entidad)
+        public ActionResult Edit(int id, TipoInmueble entidad)
         {
             try
             {
-                var i = repositorio.ObtenerPorId(id);
-                if (i == null) return NotFound();
+                var t = repositorio.ObtenerPorId(id);
+                if (t == null) return NotFound();
                 if (!ModelState.IsValid) return View(entidad);
 
-                i.Direccion = entidad.Direccion;
-                i.Cupo = entidad.Cupo;
-                i.IdTipoInmueble = entidad.IdTipoInmueble;
-                i.Latitud = entidad.Latitud;
-                i.Longitud = entidad.Longitud;
-                i.PrecioPorDia = entidad.PrecioPorDia;
-                i.PorcentajeReserva = entidad.PorcentajeReserva;
-                i.IdPropietario = entidad.IdPropietario;
-                repositorio.Modificacion(i);
+                t.Descripcion = entidad.Descripcion;
+                repositorio.Modificacion(t);
                 TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }
@@ -122,24 +107,6 @@ namespace InmobiliariaWeb.Controllers
                 ModelState.AddModelError("", "Ocurrió un error al guardar: " + ex.Message);
                 return View(entidad);
             }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Suspender(int id)
-        {
-            repositorio.CambiarDisponibilidad(id, false);
-            TempData["Mensaje"] = "Inmueble suspendido de la oferta";
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Reactivar(int id)
-        {
-            repositorio.CambiarDisponibilidad(id, true);
-            TempData["Mensaje"] = "Inmueble reactivado en la oferta";
-            return RedirectToAction(nameof(Index));
         }
     }
 }
