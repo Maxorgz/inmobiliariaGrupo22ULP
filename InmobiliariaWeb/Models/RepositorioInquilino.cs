@@ -55,6 +55,33 @@ namespace InmobiliariaWeb.Models
             return inquilino;
         }
 
+        public IList<Inquilino> BuscarPorNombre(string q)
+        {
+            var lista = new List<Inquilino>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = @"SELECT IdInquilino, Dni, Nombre, Apellido, Telefono, Email FROM Inquilino
+                        WHERE Nombre LIKE @q OR Apellido LIKE @q
+                        ORDER BY Apellido, Nombre
+                        LIMIT 10";
+            using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@q", $"%{q}%");
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new Inquilino
+                {
+                    IdInquilino = reader.GetInt32("IdInquilino"),
+                    Dni = reader.GetString("Dni"),
+                    Nombre = reader.GetString("Nombre"),
+                    Apellido = reader.GetString("Apellido"),
+                    Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString("Telefono"),
+                    Email = reader.GetString("Email"),
+                });
+            }
+            return lista;
+        }
+
         public int Alta(Inquilino i)
         {
             using var connection = new MySqlConnection(connectionString);
