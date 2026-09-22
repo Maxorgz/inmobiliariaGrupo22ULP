@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaWeb.Models; 
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaWeb.Controllers
 {
@@ -12,10 +13,21 @@ namespace InmobiliariaWeb.Controllers
             _repoInquilino = new RepositorioInquilino(configuration);
         }
 
-        public IActionResult Index()
+        [Authorize]
+        public IActionResult Index(int pagina = 1, int tamanio = 10)
         {
-            var lista = _repoInquilino.ObtenerTodos(); 
-            return View(lista);
+            if (tamanio != 5 && tamanio != 10 && tamanio != 20) tamanio = 10;
+            int totalRegistros = _repoInquilino.ObtenerTotal();
+            int totalPaginas = Math.Max(1, (int)Math.Ceiling(totalRegistros / (decimal)tamanio));
+            pagina = Math.Clamp(pagina, 1, totalPaginas);
+            var propietarios = _repoInquilino.ObtenerTodos(pagina, tamanio);
+
+            ViewBag.PaginaActual = pagina;
+            ViewBag.TamanioPagina = tamanio;
+            ViewBag.TotalPaginas = totalPaginas;
+            ViewBag.TotalRegistros = totalRegistros;
+
+            return View(propietarios);
         }
 
         public IActionResult Create()

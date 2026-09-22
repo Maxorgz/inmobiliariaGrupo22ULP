@@ -7,12 +7,25 @@ namespace InmobiliariaWeb.Models
     {
         public RepositorioInquilino(IConfiguration configuration) : base(configuration) { }
 
-        public IList<Inquilino> ObtenerTodos()
+        public IList<Inquilino> ObtenerTodos(int pagina, int tamanio)
         {
+            if (pagina < 1) pagina = 1;
+            if (tamanio < 1) tamanio = 10;
+
+            long offset = ((long)pagina - 1) * tamanio;
             var lista = new List<Inquilino>();
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdInquilino, Dni, Nombre, Apellido, Telefono, Email, IsActive FROM Inquilino";
+            
+            var sql = @"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email, IsActive
+                        FROM Inquilino
+                        WHERE IsActive = 1
+                        ORDER BY IdInquilino
+                        LIMIT @tamanio OFFSET @offset";
+            
             using var command = new MySqlCommand(sql, connection);
+                
+            command.Parameters.AddWithValue("@tamanio", tamanio);
+            command.Parameters.AddWithValue("@offset", offset);
             connection.Open();
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -20,15 +33,24 @@ namespace InmobiliariaWeb.Models
                 lista.Add(new Inquilino
                 {
                     IdInquilino = reader.GetInt32("IdInquilino"),
-                    Dni = reader.GetString("Dni"),
                     Nombre = reader.GetString("Nombre"),
                     Apellido = reader.GetString("Apellido"),
+                    Dni = reader.GetString("Dni"),
                     Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString("Telefono"),
                     Email = reader.GetString("Email"),
-                    IsActive = reader.GetBoolean("IsActive"), 
+                    IsActive = reader.GetBoolean("IsActive"),
                 });
             }
             return lista;
+        }
+
+        public int ObtenerTotal()
+        {
+           using var connection = new MySqlConnection(connectionString);
+            var sql = "SELECT COUNT(*) FROM Inquilino WHERE IsActive = 1";
+            using var command = new MySqlCommand(sql, connection);
+            connection.Open();
+            return Convert.ToInt32(command.ExecuteScalar());
         }
 
         public Inquilino? ObtenerPorId(int id)
