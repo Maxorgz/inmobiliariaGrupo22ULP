@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using InmobiliariaWeb.Models;
+using InmobiliariaWeb.Repositorio;
 
 var builder = WebApplication.CreateBuilder(args);
 

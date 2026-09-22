@@ -1,6 +1,7 @@
 using MySqlConnector;
+using InmobiliariaWeb.Models;
 
-namespace InmobiliariaWeb.Models
+namespace InmobiliariaWeb.Repositorio
 {
     public class RepositorioReserva : RepositorioBase, IRepositorioReserva
     {
@@ -102,6 +103,17 @@ namespace InmobiliariaWeb.Models
             connection.Open();
             r.IdReserva = Convert.ToInt32(command.ExecuteScalar());
             return r.IdReserva;
+        }
+
+        public int Baja(int id)
+        {
+            using var connection = new MySqlConnection(connectionString);
+            // Nota: Si tu sistema usa borrado lógico, cambiá el DELETE por un UPDATE Estado = 0
+            var sql = "DELETE FROM Reserva WHERE IdReserva = @id";
+            using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@id", id);
+            connection.Open();
+            return command.ExecuteNonQuery();
         }
 
         public int Modificacion(Reserva r)

@@ -1,0 +1,67 @@
+@model InmobiliariaWeb.Models.Reserva
+
+@{
+    ViewData["Title"] = "Editar Reserva";
+}
+
+<div class="container mt-4">
+    <h2>Editar Reserva #@Model.IdReserva</h2>
+    <hr />
+    
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <div asp-validation-summary="All" class="text-danger mb-0"></div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="IdReserva" />
+                
+                <div class="form-group mb-3">
+                    <label asp-for="IdInquilino" class="control-label">Inquilino</label>
+                    <select asp-for="IdInquilino" class="form-select" required>
+                        <option value="">Seleccione un inquilino...</option>
+                        @foreach (var inq in ViewBag.Inquilinos)
+                        {
+                            <option value="@inq.IdInquilino">@inq.Nombre @inq.Apellido (DNI: @inq.Dni)</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="IdInmueble" class="control-label">Inmueble</label>
+                    <select asp-for="IdInmueble" class="form-select" required>
+                        <option value="">Seleccione un inmueble...</option>
+                        @foreach (var inm in ViewBag.Inmuebles)
+                        {
+                            <option value="@inm.IdInmueble">@inm.Direccion (Cupo: @inm.Cupo)</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="FechaDesde" class="control-label">Fecha de Inicio</label>
+                            <input asp-for="FechaDesde" class="form-control" type="date" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label asp-for="FechaHasta" class="control-label">Fecha de Fin</label>
+                            <input asp-for="FechaHasta" class="form-control" type="date" required />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

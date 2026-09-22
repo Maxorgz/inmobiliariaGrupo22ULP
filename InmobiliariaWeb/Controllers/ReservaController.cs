@@ -1,17 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
+using InmobiliariaWeb.Repositorio;
+using Microsoft.AspNetCore.Authorization;
 using InmobiliariaWeb.Models;
 
 namespace InmobiliariaWeb.Controllers
 {
+    [Authorize]
     public class ReservaController : Controller
     {
-        private readonly IRepositorioReserva repositorio;
+        private readonly RepositorioReserva repositorio;
         private readonly IRepositorioInquilino repoInquilino;
         private readonly IRepositorioInmueble repoInmueble;
         private readonly ILogger<ReservaController> logger;
 
         public ReservaController(
-            IRepositorioReserva repo,
+            RepositorioReserva repo,
             IRepositorioInquilino repoInquilino,
             IRepositorioInmueble repoInmueble,
             ILogger<ReservaController> logger)
@@ -67,6 +70,8 @@ namespace InmobiliariaWeb.Controllers
 
         public ActionResult Create()
         {
+            ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+            ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
             return View();
         }
 
@@ -116,6 +121,10 @@ namespace InmobiliariaWeb.Controllers
         {
             var entidad = repositorio.ObtenerPorId(id);
             if (entidad == null) return NotFound();
+            
+            ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+            ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+            
             return View(entidad);
         }
 
@@ -156,6 +165,31 @@ namespace InmobiliariaWeb.Controllers
                 logger.LogError(ex, "Error en Edit");
                 ModelState.AddModelError("", "Ocurrió un error al guardar: " + ex.Message);
                 return View(entidad);
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var entidad = repositorio.ObtenerPorId(id);
+            if (entidad == null) return NotFound();
+            return View(entidad);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            try
+            {
+                repositorio.Baja(id); 
+                TempData["Mensaje"] = "Reserva anulada correctamente";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error en Delete");
+                TempData["Error"] = "Ocurrió un error al intentar anular la reserva.";
+                return RedirectToAction(nameof(Index));
             }
         }
     }

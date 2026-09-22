@@ -1,8 +1,11 @@
-namespace InmobiliariaWeb.Models
+using InmobiliariaWeb.Models;
+
+namespace InmobiliariaWeb.Repositorio
 {
     public interface IRepositorioInmueble
     {
         IList<Inmueble> ObtenerLista(int pagina, int tamano);
+        IList<Inmueble> ObtenerTodos();
         int ObtenerCantidad();
         Inmueble? ObtenerPorId(int id);
         IList<Inmueble> BuscarPorDireccion(string q);

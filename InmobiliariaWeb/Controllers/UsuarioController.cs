@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using InmobiliariaWeb.Models;
+using InmobiliariaWeb.Repositorio;
 
 namespace InmobiliariaWeb.Controllers
 {

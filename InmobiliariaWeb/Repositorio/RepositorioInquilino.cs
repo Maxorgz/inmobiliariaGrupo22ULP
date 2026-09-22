@@ -1,7 +1,8 @@
 using MySqlConnector;
 using Microsoft.Extensions.Configuration;
+using InmobiliariaWeb.Models;
 
-namespace InmobiliariaWeb.Models
+namespace InmobiliariaWeb.Repositorio
 {
     public class RepositorioInquilino : RepositorioBase, IRepositorioInquilino
     {

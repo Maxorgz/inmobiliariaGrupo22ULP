@@ -1,4 +1,6 @@
-namespace InmobiliariaWeb.Models
+using InmobiliariaWeb.Models;
+
+namespace InmobiliariaWeb.Repositorio
 {
     public interface IRepositorioUsuario
     {

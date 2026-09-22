@@ -1,6 +1,7 @@
 using MySqlConnector;
+using InmobiliariaWeb.Models;
 
-namespace InmobiliariaWeb.Models
+namespace InmobiliariaWeb.Repositorio
 {
     public class RepositorioInmueble : RepositorioBase, IRepositorioInmueble
     {
@@ -55,6 +56,26 @@ namespace InmobiliariaWeb.Models
             using var command = new MySqlCommand(sql, connection);
             connection.Open();
             return Convert.ToInt32(command.ExecuteScalar());
+        }
+
+        public IList<Inmueble> ObtenerTodos()
+        {
+            var lista = new List<Inmueble>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = "SELECT * FROM Inmueble";
+            using var command = new MySqlCommand(sql, connection);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new Inmueble
+                {
+                    IdInmueble = reader.GetInt32("IdInmueble"),
+                    Direccion = reader.GetString("Direccion"),
+                    PrecioPorDia = reader.GetDecimal("PrecioPorDia") 
+                });
+            }
+            return lista;
         }
 
         public Inmueble? ObtenerPorId(int id)

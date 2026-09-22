@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using InmobiliariaWeb.Models; 
+using InmobiliariaWeb.Models;
+using InmobiliariaWeb.Repositorio; 
 
 namespace InmobiliariaWeb.Controllers
 {
