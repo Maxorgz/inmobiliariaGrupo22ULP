@@ -55,3 +55,31 @@ CREATE TABLE IF NOT EXISTS Reserva (
     FOREIGN KEY (IdInquilino) REFERENCES Inquilino(IdInquilino),
     FOREIGN KEY (IdInmueble) REFERENCES Inmueble(IdInmueble)
 );
+
+CREATE TABLE IF NOT EXISTS Usuario (
+    IdUsuario INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50) NOT NULL,
+    Apellido VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    Clave VARCHAR(255) NOT NULL,
+    Avatar VARCHAR(255) NULL,
+    Rol INT NOT NULL DEFAULT 2 -- 1: Administrador, 2: Empleado
+);
+
+INSERT INTO Usuario (Nombre, Apellido, Email, Clave, Rol)
+VALUES ('Admin', 'Principal', 'admin@inmobiliaria.com', 'admin123', 1)
+ON DUPLICATE KEY UPDATE Email = Email;
+
+CREATE TABLE IF NOT EXISTS Pago (
+    IdPago INT AUTO_INCREMENT PRIMARY KEY,
+    IdReserva INT NOT NULL,
+    Concepto VARCHAR(255) NOT NULL,
+    FechaPago DATETIME NOT NULL,
+    Importe DECIMAL(10,2) NOT NULL,
+    Estado TINYINT(1) NOT NULL DEFAULT 1,
+    IdUsuarioCreador INT NOT NULL,
+    IdUsuarioAnulador INT NULL,
+    FOREIGN KEY (IdReserva) REFERENCES Reserva(IdReserva),
+    FOREIGN KEY (IdUsuarioCreador) REFERENCES Usuario(IdUsuario),
+    FOREIGN KEY (IdUsuarioAnulador) REFERENCES Usuario(IdUsuario)
+);
