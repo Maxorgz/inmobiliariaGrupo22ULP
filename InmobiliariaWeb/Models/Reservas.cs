@@ -35,7 +35,6 @@ namespace InmobiliariaWeb.Models
 
         public decimal? Multa { get; set; }
 
-        [NotMapped]
         public decimal MontoPorDia { get; set; }
 
         [NotMapped]

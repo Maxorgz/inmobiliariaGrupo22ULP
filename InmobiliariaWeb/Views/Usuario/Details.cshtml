@@ -1,0 +1,48 @@
+@model InmobiliariaWeb.Models.Usuario
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+}
+
+<div class="container mt-4">
+    <h2>Detalles del Usuario</h2>
+    <hr />
+
+    <div class="card shadow-sm col-md-8">
+        <div class="row g-0">
+            <div class="col-md-4 d-flex align-items-center justify-content-center p-3 bg-light border-end">
+                @if (!string.IsNullOrEmpty(Model.Avatar))
+                {
+                    <img src="@Model.Avatar" alt="Avatar" class="img-fluid rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="text-center text-muted">
+                        <span class="badge bg-secondary p-3 fs-6">Sin foto de perfil</span>
+                    </div>
+                }
+            </div>
+            <div class="col-md-8">
+                <div class="card-body p-4">
+                    <h4 class="card-title text-primary">@Model.Nombre @Model.Apellido</h4>
+                    <p class="card-text mb-3">
+                        <span class="badge @(Model.RolNombre == "Administrador" ? "bg-danger" : "bg-info")">
+                            @Model.RolNombre
+                        </span>
+                    </p>
+                    <dl class="row mb-0 mt-3">
+                        <dt class="col-sm-5 text-muted">ID de Usuario</dt>
+                        <dd class="col-sm-7 fw-bold">#@Model.IdUsuario</dd>
+
+                        <dt class="col-sm-5 text-muted">Correo Electrónico</dt>
+                        <dd class="col-sm-7">@Model.Email</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white py-3">
+            <a asp-action="Edit" asp-route-id="@Model.IdUsuario" class="btn btn-warning">Editar Perfil</a>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Volver al listado</a>
+        </div>
+    </div>
+</div>

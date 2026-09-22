@@ -1,17 +1,29 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using InmobiliariaWeb.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("MySqlConn");
-// builder.Services.AddDbContext<DataContext>(options => ...); // Comentado temporalmente si usan otro conector
+
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Usuario/Login"; 
+        options.LogoutPath = "/Usuario/Logout";
+        options.AccessDeniedPath = "/Home/Restringido"; 
+    });
 
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddScoped<IRepositorioInquilino, RepositorioInquilino>();
 builder.Services.AddScoped<IRepositorioPropietario, RepositorioPropietario>();
 builder.Services.AddScoped<IRepositorioTipoInmueble, RepositorioTipoInmueble>();
 builder.Services.AddScoped<IRepositorioInmueble, RepositorioInmueble>();
 builder.Services.AddScoped<IRepositorioReserva, RepositorioReserva>();
+builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>(); 
+builder.Services.AddScoped<IRepositorioPago, RepositorioPago>();
 
 var app = builder.Build();
 
@@ -24,6 +36,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapStaticAssets();
