@@ -4,7 +4,9 @@ namespace InmobiliariaWeb.Repositorio
 {
     public interface IRepositorioPropietario
     {
-        IList<Propietario> ObtenerTodos();
+        IList<Propietario> ObtenerTodos(int pagina, int tamanio);
+
+        int ObtenerTotal();
         Propietario? ObtenerPorId(int id);
         IList<Propietario> BuscarPorNombre(string q);
         int Alta(Propietario p);

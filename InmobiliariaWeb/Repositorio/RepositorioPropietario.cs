@@ -7,12 +7,26 @@ namespace InmobiliariaWeb.Repositorio
     {
         public RepositorioPropietario(IConfiguration configuration) : base(configuration) { }
 
-        public IList<Propietario> ObtenerTodos()
+        public IList<Propietario> ObtenerTodos(int pagina, int tamanio)
         {
+            if (pagina < 1) pagina = 1;
+            if (tamanio < 1) tamanio = 10;
+
+            long offset = ((long)pagina - 1) * tamanio;
             var lista = new List<Propietario>();
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, IsActive FROM Propietario";
+            
+            var sql = @"SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, IsActive
+                        FROM Propietario
+                        WHERE IsActive = 1
+                        ORDER BY IdPropietario
+                        LIMIT @tamanio OFFSET @offset";
+            
+//          var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, IsActive FROM Propietario";
             using var command = new MySqlCommand(sql, connection);
+                
+            command.Parameters.AddWithValue("@tamanio", tamanio);
+            command.Parameters.AddWithValue("@offset", offset);
             connection.Open();
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -29,6 +43,15 @@ namespace InmobiliariaWeb.Repositorio
                 });
             }
             return lista;
+        }
+    
+        public int ObtenerTotal()
+        {
+           using var connection = new MySqlConnection(connectionString);
+            var sql = "SELECT COUNT(*) FROM Propietario WHERE IsActive = 1";
+            using var command = new MySqlCommand(sql, connection);
+            connection.Open();
+            return Convert.ToInt32(command.ExecuteScalar());
         }
 
         public Propietario? ObtenerPorId(int id)
