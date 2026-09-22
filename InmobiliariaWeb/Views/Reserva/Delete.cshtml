@@ -1,0 +1,40 @@
+@model InmobiliariaWeb.Models.Reserva
+
+@{
+    ViewData["Title"] = "Anular Reserva";
+}
+
+<div class="container mt-4">
+    <h2 class="text-danger">Anular Reserva #@Model.IdReserva</h2>
+    <p class="lead">¿Está seguro que desea anular esta reserva?</p>
+    <hr />
+
+    <div class="card shadow-sm col-md-6">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-5 text-muted">Inquilino</dt>
+                <dd class="col-sm-7 fw-bold">@Model.InquilinoNombreCompleto</dd>
+
+                <dt class="col-sm-5 text-muted">Inmueble</dt>
+                <dd class="col-sm-7">@Model.InmuebleDireccion</dd>
+
+                <dt class="col-sm-5 text-muted">Fecha de Inicio</dt>
+                <dd class="col-sm-7">@Model.FechaDesde.ToShortDateString()</dd>
+
+                <dt class="col-sm-5 text-muted">Fecha de Fin</dt>
+                <dd class="col-sm-7">@Model.FechaHasta.ToShortDateString()</dd>
+
+                <dt class="col-sm-5 text-muted">Monto Diario</dt>
+                <dd class="col-sm-7 text-success fw-bold">$@Model.MontoPorDia</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="IdReserva" />
+            <button type="submit" class="btn btn-danger">Confirmar Anulación</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>

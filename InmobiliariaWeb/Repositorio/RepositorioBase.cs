@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace InmobiliariaWeb.Models
+namespace InmobiliariaWeb.Repositorio
 {
     public abstract class RepositorioBase
     {
