@@ -8,6 +8,11 @@
         </a>
     </div>
 
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success mx-3 mt-3 mb-0">@TempData["Mensaje"]</div>
+    }
+
     <div class="card-body p-0">
         <table class="table table-hover mb-0 align-middle">
             <thead class="table-light text-secondary">
@@ -57,4 +62,32 @@
             </tbody>
         </table>
     </div>
-</div>
+
+@{
+    int paginaActual = ViewBag.PaginaActual;
+    int totalPaginas = ViewBag.TotalPaginas;
+}
+
+@if (totalPaginas > 1)
+{
+    <div class="card-footer bg-white d-flex justify-content-center py-3">
+        <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item @(paginaActual <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pagina="@(paginaActual - 1)">&laquo; Anterior</a>
+                </li>
+
+                @for (int i = 1; i <= totalPaginas; i++)
+                {
+                    <li class="page-item @(i == paginaActual ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pagina="@i">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(paginaActual >= totalPaginas ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pagina="@(paginaActual + 1)">Siguiente &raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}
