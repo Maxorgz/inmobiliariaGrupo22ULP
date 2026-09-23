@@ -8,7 +8,7 @@ namespace InmobiliariaWeb.Repositorio
     {
         public RepositorioInquilino(IConfiguration configuration) : base(configuration) { }
 
-        public IList<Inquilino> ObtenerTodos(int pagina, int tamanio)
+        public IList<Inquilino> ObtenerLista(int pagina, int tamanio)
         {
             if (pagina < 1) pagina = 1;
             if (tamanio < 1) tamanio = 10;
@@ -27,6 +27,35 @@ namespace InmobiliariaWeb.Repositorio
                 
             command.Parameters.AddWithValue("@tamanio", tamanio);
             command.Parameters.AddWithValue("@offset", offset);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new Inquilino
+                {
+                    IdInquilino = reader.GetInt32("IdInquilino"),
+                    Nombre = reader.GetString("Nombre"),
+                    Apellido = reader.GetString("Apellido"),
+                    Dni = reader.GetString("Dni"),
+                    Telefono = reader.IsDBNull(reader.GetOrdinal("Telefono")) ? null : reader.GetString("Telefono"),
+                    Email = reader.GetString("Email"),
+                    IsActive = reader.GetBoolean("IsActive"),
+                });
+            }
+            return lista;
+        }
+
+        public IList<Inquilino> ObtenerTodos()
+        {
+            var lista = new List<Inquilino>();
+            using var connection = new MySqlConnection(connectionString);
+            
+            var sql = @"SELECT IdInquilino, Nombre, Apellido, Dni, Telefono, Email, IsActive
+                        FROM Inquilino
+                        WHERE IsActive = 1
+                        ORDER BY Apellido, Nombre";
+            
+            using var command = new MySqlCommand(sql, connection);
             connection.Open();
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -83,7 +112,7 @@ namespace InmobiliariaWeb.Repositorio
             var lista = new List<Inquilino>();
             using var connection = new MySqlConnection(connectionString);
             var sql = @"SELECT IdInquilino, Dni, Nombre, Apellido, Telefono, Email FROM Inquilino
-                        WHERE Nombre LIKE @q OR Apellido LIKE @q
+                        WHERE (Nombre LIKE @q OR Apellido LIKE @q) AND IsActive = 1
                         ORDER BY Apellido, Nombre
                         LIMIT 10";
             using var command = new MySqlCommand(sql, connection);
@@ -108,8 +137,8 @@ namespace InmobiliariaWeb.Repositorio
         public int Alta(Inquilino i)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = @"INSERT INTO Inquilino (Dni, Nombre, Apellido, Telefono, Email)
-                        VALUES (@dni, @nombre, @apellido, @telefono, @email);
+            var sql = @"INSERT INTO Inquilino (Dni, Nombre, Apellido, Telefono, Email, IsActive)
+                        VALUES (@dni, @nombre, @apellido, @telefono, @email, 1);
                         SELECT LAST_INSERT_ID();";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@dni", i.Dni);
@@ -141,7 +170,7 @@ namespace InmobiliariaWeb.Repositorio
         public int Baja(int id)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = "UPDATE Inquilino SET IsActive = 0 WHERE IdPropietario = @id";
+            var sql = "UPDATE Inquilino SET IsActive = 0 WHERE IdInquilino = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);
             connection.Open();

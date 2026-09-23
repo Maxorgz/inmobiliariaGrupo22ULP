@@ -8,13 +8,13 @@ namespace InmobiliariaWeb.Controllers
     [Authorize]
     public class ReservaController : Controller
     {
-        private readonly RepositorioReserva repositorio;
+        private readonly IRepositorioReserva repositorio;
         private readonly IRepositorioInquilino repoInquilino;
         private readonly IRepositorioInmueble repoInmueble;
         private readonly ILogger<ReservaController> logger;
 
         public ReservaController(
-            RepositorioReserva repo,
+            IRepositorioReserva repo,
             IRepositorioInquilino repoInquilino,
             IRepositorioInmueble repoInmueble,
             ILogger<ReservaController> logger)
@@ -70,7 +70,7 @@ namespace InmobiliariaWeb.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.Inquilinos = repoInquilino.ObtenerTodos(1, 10);
+            ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
             ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
             return View();
         }
@@ -122,7 +122,7 @@ namespace InmobiliariaWeb.Controllers
             var entidad = repositorio.ObtenerPorId(id);
             if (entidad == null) return NotFound();
             
-            ViewBag.Inquilinos = repoInquilino.ObtenerTodos(1, 10);
+            ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
             ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
             
             return View(entidad);

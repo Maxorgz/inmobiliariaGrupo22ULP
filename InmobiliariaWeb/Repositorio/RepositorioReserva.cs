@@ -108,7 +108,6 @@ namespace InmobiliariaWeb.Repositorio
         public int Baja(int id)
         {
             using var connection = new MySqlConnection(connectionString);
-            // Nota: Si tu sistema usa borrado lógico, cambiá el DELETE por un UPDATE Estado = 0
             var sql = "DELETE FROM Reserva WHERE IdReserva = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@id", id);

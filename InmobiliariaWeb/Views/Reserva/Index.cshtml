@@ -1,0 +1,85 @@
+@model IEnumerable<InmobiliariaWeb.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Gestión de Reservas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Listado de Reservas</h2>
+        <a asp-action="Create" class="btn btn-primary">Nueva Reserva</a>
+    </div>
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @ViewBag.Mensaje
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Inquilino (ID)</th>
+                <th>Inmueble (ID)</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle fw-bold">@item.IdReserva</td>
+                        <td class="align-middle">
+                            @item.InquilinoNombreCompleto
+                        </td>
+                        <td class="align-middle">
+                            @item.InmuebleDireccion
+                        </td>
+                        <td class="align-middle">@item.FechaDesde.ToShortDateString()</td>
+                        <td class="align-middle">@item.FechaHasta.ToShortDateString()</td>
+                        <td class="align-middle">
+                            <a asp-controller="Pago" asp-action="Index" asp-route-idReserva="@item.IdReserva" class="btn btn-sm btn-success mb-1">Pagos</a>
+                            <a asp-action="Edit" asp-route-id="@item.IdReserva" class="btn btn-sm btn-warning mb-1">Editar</a>
+                            <a asp-action="Details" asp-route-id="@item.IdReserva" class="btn btn-sm btn-info mb-1">Detalles</a>
+                            <a asp-action="Delete" asp-route-id="@item.IdReserva" class="btn btn-sm btn-danger mb-1">Anular</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No hay reservas registradas en el sistema.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (ViewBag.TotalPaginas > 1)
+    {
+        <div class="d-flex justify-content-center mt-4">
+            <ul class="pagination shadow-sm">
+                @for (int i = 1; i <= ViewBag.TotalPaginas; i++)
+                {
+                    <li class="page-item @(i == ViewBag.Pagina ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pagina="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>

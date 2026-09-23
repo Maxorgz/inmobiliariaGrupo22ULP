@@ -23,7 +23,7 @@ namespace InmobiliariaWeb.Controllers
             int totalRegistros = _repoInquilino.ObtenerTotal();
             int totalPaginas = Math.Max(1, (int)Math.Ceiling(totalRegistros / (decimal)tamanio));
             pagina = Math.Clamp(pagina, 1, totalPaginas);
-            var propietarios = _repoInquilino.ObtenerTodos(pagina, tamanio);
+            var propietarios = _repoInquilino.ObtenerLista(pagina, tamanio);
 
             ViewBag.PaginaActual = pagina;
             ViewBag.TamanioPagina = tamanio;

@@ -4,7 +4,8 @@ namespace InmobiliariaWeb.Repositorio
 {
     public interface IRepositorioInquilino
     {
-        IList<Inquilino> ObtenerTodos(int pagina, int tamanio);
+        IList<Inquilino> ObtenerLista(int pagina, int tamanio);
+        IList<Inquilino> ObtenerTodos();
         int ObtenerTotal();
         Inquilino? ObtenerPorId(int id);
         IList<Inquilino> BuscarPorNombre(string q); 

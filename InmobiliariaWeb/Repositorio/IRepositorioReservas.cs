@@ -9,6 +9,7 @@ namespace InmobiliariaWeb.Repositorio
         Reserva? ObtenerPorId(int id);
         bool ExisteSolapamiento(int idInmueble, DateTime desde, DateTime hasta, int idReservaExcluir);
         int Alta(Reserva r);
+        int Baja(int id);
         int Modificacion(Reserva r);
     }
 }
