@@ -43,16 +43,27 @@
                     <tr>
                         <td class="align-middle fw-bold">@item.Direccion</td>
                         <td class="align-middle">
-                            @item.PropietarioNombreCompleto
+                            @item.TipoInmuebleDescripcion
                         </td>
                         <td class="align-middle">
-                            @item.TipoInmuebleDescripcion
+                            @item.PropietarioNombreCompleto
                         </td>
                         <td class="align-middle text-success fw-bold">$@item.PrecioPorDia</td>
                         <td class="align-middle">
                             <a asp-action="Edit" asp-route-id="@item.IdInmueble" class="btn btn-sm btn-warning mb-1">Editar</a>
                             <a asp-action="Details" asp-route-id="@item.IdInmueble" class="btn btn-sm btn-info mb-1">Detalles</a>
-                            <a asp-action="Delete" asp-route-id="@item.IdInmueble" class="btn btn-sm btn-danger mb-1">Dar de Baja</a>
+                            @if (item.Disponible)
+                            {
+                                <form asp-action="Suspender" asp-route-id="@item.IdInmueble" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger mb-1">Suspender</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="Reactivar" asp-route-id="@item.IdInmueble" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-success mb-1">Reactivar</button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }
