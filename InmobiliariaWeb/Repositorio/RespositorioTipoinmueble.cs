@@ -30,6 +30,30 @@ namespace InmobiliariaWeb.Repositorio
             return lista;
         }
 
+        public IList<TipoInmueble> ObtenerTodos()
+        {
+            var lista = new List<TipoInmueble>();
+            using var connection = new MySqlConnection(connectionString);
+
+            var sql = @"SELECT IdTipoInmueble, Descripcion 
+                FROM TipoInmueble 
+                ORDER BY Descripcion";
+
+            using var command = new MySqlCommand(sql, connection);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                lista.Add(new TipoInmueble
+                {
+                    IdTipoInmueble = reader.GetInt32("IdTipoInmueble"),
+                    Descripcion = reader.GetString("Descripcion")
+                });
+            }
+            return lista;
+        }
+
         public int ObtenerCantidad()
         {
             using var connection = new MySqlConnection(connectionString);

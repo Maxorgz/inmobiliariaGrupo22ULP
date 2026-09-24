@@ -1,0 +1,51 @@
+@model IEnumerable<InmobiliariaWeb.Models.TipoInmueble>
+
+@{
+    ViewData["Title"] = "Tipos de Inmuebles";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Tipos de Inmuebles</h2>
+        <a asp-action="Create" class="btn btn-primary">Nuevo Tipo</a>
+    </div>
+
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @ViewBag.Mensaje
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="align-middle fw-bold">@item.IdTipoInmueble</td>
+                        <td class="align-middle">@item.Descripcion</td>
+                        <td class="align-middle">
+                            <a asp-action="Edit" asp-route-id="@item.IdTipoInmueble" class="btn btn-sm btn-warning">Editar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-muted">No hay tipos de inmuebles registrados.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

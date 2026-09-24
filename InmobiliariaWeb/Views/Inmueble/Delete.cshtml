@@ -1,0 +1,63 @@
+@model InmobiliariaWeb.Models.Inmueble
+
+@{
+    bool esSuspension = Model.Disponible;
+    ViewData["Title"] = esSuspension ? "Suspender Inmueble" : "Reactivar Inmueble";
+}
+
+<div class="container mt-4">
+    <h2 class="@(esSuspension ? "text-danger" : "text-success")">
+        @(esSuspension ? "Suspender Inmueble" : "Reactivar Inmueble") #@Model.IdInmueble
+    </h2>
+    <p class="lead">
+        @(esSuspension
+            ? "¿Esta seguro que desea suspender este inmueble? Dejara de aparecer en las busquedas."
+            : "¿Desea volver a dar de alta este inmueble para que pueda ser alquilado nuevamente?")
+    </p>
+    <hr />
+
+    <div class="card shadow-sm col-md-6 @(esSuspension ? "border-danger" : "border-success")">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted">Dirección</dt>
+                <dd class="col-sm-8 fw-bold">@Model.Direccion</dd>
+
+                <dt class="col-sm-4 text-muted">Propietario</dt>
+                <dd class="col-sm-8">
+                    @if (!string.IsNullOrEmpty(Model.PropietarioNombreCompleto))
+                    {
+                        <span>@Model.PropietarioNombreCompleto</span>
+                    }
+                    else
+                    {
+                        <span>ID: @Model.IdPropietario</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <dt class="col-sm-4 text-muted">Estado Actual</dt>
+    <dd class="col-sm-8">
+        @if (Model.Disponible)
+        {
+            <span class="badge bg-success">Disponible</span>
+        }
+        else
+        {
+            <span class="badge bg-danger">Suspendido</span>
+        }
+    </dd>
+</dl>
+</div>
+</div>
+
+<div class="mt-4">
+    <form asp-action="@(esSuspension ? "Suspender" : "Reactivar")" method="post">
+        <input type="hidden" asp-for="IdInmueble" />
+        <button type="submit" class="btn @(esSuspension ? "btn-danger" : "btn-success")">
+            @(esSuspension ? "Confirmar Suspensión" : "Confirmar Reactivación")
+        </button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>
+</div>

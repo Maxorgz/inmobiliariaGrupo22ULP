@@ -1,0 +1,58 @@
+@model InmobiliariaWeb.Models.Inmueble
+
+@{
+    ViewData["Title"] = "Detalles del Inmueble";
+}
+
+<div class="container mt-4">
+    <h2>Detalles del Inmueble #@Model.IdInmueble</h2>
+    <hr />
+
+    <div class="card shadow-sm col-md-8 mx-auto">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="bi bi-house-door-fill"></i> Información General</h5>
+        </div>
+        <div class="card-body p-4">
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted">Dirección</dt>
+                <dd class="col-sm-8 fw-bold">@Model.Direccion</dd>
+
+                <dt class="col-sm-4 text-muted mt-3">Propietario</dt>
+                <dd class="col-sm-8 mt-3">
+                    @if (!string.IsNullOrEmpty(Model.PropietarioNombreCompleto))
+                    {
+                        <span>@Model.PropietarioNombreCompleto</span>
+                    }
+                    else
+                    {
+                        <span>ID: @Model.IdPropietario</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-4 text-muted mt-3">Tipo (ID)</dt>
+                <dd class="col-sm-8 mt-3">@Model.IdTipoInmueble</dd>
+
+                <dt class="col-sm-4 text-muted mt-3">Condiciones</dt>
+                <dd class="col-sm-8 mt-3">Cupo: @Model.Cupo personas | Reserva mínima: @Model.PorcentajeReserva%</dd>
+
+                <dt class="col-sm-4 text-muted mt-3">Precio por Día</dt>
+                <dd class="col-sm-8 mt-3 text-success fw-bold fs-5">$@Model.PrecioPorDia</dd>
+
+                @if(Model.Latitud != null && Model.Longitud != null && Model.Latitud != 0 && Model.Longitud != 0)
+                {
+                    <dt class="col-sm-4 text-muted mt-3">Ubicación (GPS)</dt>
+                    <dd class="col-sm-8 mt-3">
+                        <a href="https://www.google.com/maps/search/?api=1&query=@Model.Latitud.ToString().Replace(',','.')%2C@Model.Longitud.ToString().Replace(',','.')" 
+                           target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-geo-alt-fill"></i> Ver en Google Maps
+                        </a>
+                    </dd>
+                }
+            </dl>
+        </div>
+        <div class="card-footer bg-light py-3 d-flex justify-content-end">
+            <a asp-action="Edit" asp-route-id="@Model.IdInmueble" class="btn btn-warning me-2">Editar</a>
+            <a asp-action="Index" class="btn btn-secondary">Volver al listado</a>
+        </div>
+    </div>
+</div>

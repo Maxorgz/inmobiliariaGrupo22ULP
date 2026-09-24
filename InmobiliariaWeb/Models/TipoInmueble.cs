@@ -7,7 +7,7 @@ namespace InmobiliariaWeb.Models
         public int IdTipoInmueble { get; set; }
 
         [Required(ErrorMessage = "La descripción es obligatoria")]
-        [StringLength(50, ErrorMessage = "La descripción no puede superar los 50 caracteres")]
+        [StringLength(50, ErrorMessage = "La descripcion no puede superar los 50 caracteres")]
         public string Descripcion { get; set; } = "";
 
     }

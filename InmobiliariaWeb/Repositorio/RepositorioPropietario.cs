@@ -45,6 +45,30 @@ namespace InmobiliariaWeb.Repositorio
             return lista;
         }
     
+    public IList<Propietario> ObtenerTodos()
+        {
+            var lista = new List<Propietario>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = @"SELECT IdPropietario, Nombre, Apellido 
+                        FROM Propietario 
+                        WHERE IsActive = 1 
+                        ORDER BY Apellido, Nombre";
+                        
+            using var command = new MySqlCommand(sql, connection);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            
+            while (reader.Read())
+            {
+                lista.Add(new Propietario
+                {
+                    IdPropietario = reader.GetInt32("IdPropietario"),
+                    Nombre = reader.GetString("Nombre"),
+                    Apellido = reader.GetString("Apellido")
+                });
+            }
+            return lista;
+        }
         public int ObtenerTotal()
         {
            using var connection = new MySqlConnection(connectionString);

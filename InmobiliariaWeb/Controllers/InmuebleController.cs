@@ -63,9 +63,10 @@ namespace InmobiliariaWeb.Controllers
             var res = repoPropietario.BuscarPorNombre(q);
             return Json(new { Datos = res });
         }
-
         public ActionResult Create()
         {
+            ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+            ViewBag.TiposInmueble = repoTipo.ObtenerTodos();
             return View();
         }
 
@@ -75,7 +76,12 @@ namespace InmobiliariaWeb.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return View(entidad);
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+                    ViewBag.TiposInmueble = repoTipo.ObtenerTodos();
+                    return View(entidad);
+                }
                 repositorio.Alta(entidad);
                 TempData["Mensaje"] = "Inmueble creado correctamente";
                 return RedirectToAction(nameof(Index));
@@ -83,6 +89,8 @@ namespace InmobiliariaWeb.Controllers
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error en Create");
+                ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+                ViewBag.TiposInmueble = repoTipo.ObtenerTodos();
                 ModelState.AddModelError("", "Ocurrió un error al guardar: " + ex.Message);
                 return View(entidad);
             }
@@ -92,6 +100,8 @@ namespace InmobiliariaWeb.Controllers
         {
             var entidad = repositorio.ObtenerPorId(id);
             if (entidad == null) return NotFound();
+            ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+            ViewBag.TiposInmueble = repoTipo.ObtenerTodos();
             return View(entidad);
         }
 
@@ -103,7 +113,12 @@ namespace InmobiliariaWeb.Controllers
             {
                 var i = repositorio.ObtenerPorId(id);
                 if (i == null) return NotFound();
-                if (!ModelState.IsValid) return View(entidad);
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+                    ViewBag.TiposInmueble = repoTipo.ObtenerTodos();
+                    return View(entidad);
+                }
 
                 i.Direccion = entidad.Direccion;
                 i.Cupo = entidad.Cupo;
@@ -114,12 +129,15 @@ namespace InmobiliariaWeb.Controllers
                 i.PorcentajeReserva = entidad.PorcentajeReserva;
                 i.IdPropietario = entidad.IdPropietario;
                 repositorio.Modificacion(i);
+
                 TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error en Edit");
+                ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+                ViewBag.TiposInmueble = repoTipo.ObtenerTodos();
                 ModelState.AddModelError("", "Ocurrió un error al guardar: " + ex.Message);
                 return View(entidad);
             }
