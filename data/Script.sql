@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS Reserva (
     FechaHastaOriginal DATE NOT NULL,
     FechaTerminacionAnticipada DATE NULL,
     Multa DECIMAL(10,2) NULL,
+    MontoPorDia DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (IdInquilino) REFERENCES Inquilino(IdInquilino),
     FOREIGN KEY (IdInmueble) REFERENCES Inmueble(IdInmueble)
 );
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS Usuario (
     Email VARCHAR(100) NOT NULL UNIQUE,
     Clave VARCHAR(255) NOT NULL,
     Avatar VARCHAR(255) NULL,
-    Rol INT NOT NULL DEFAULT 2 -- 1: Administrador, 2: Empleado
+    Rol INT NOT NULL DEFAULT 2
 );
 
 INSERT INTO Usuario (Nombre, Apellido, Email, Clave, Rol)
