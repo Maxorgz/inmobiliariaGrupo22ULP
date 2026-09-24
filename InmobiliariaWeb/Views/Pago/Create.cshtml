@@ -1,0 +1,57 @@
+@model InmobiliariaWeb.Models.Pago
+
+@{
+    ViewData["Title"] = "Registrar Pago";
+    var reserva = ViewBag.Reserva as InmobiliariaWeb.Models.Reserva;
+}
+
+<div class="container mt-4">
+    <h2>Registrar Pago para Reserva #@Model.IdReserva</h2>
+    <hr />
+
+    @if (reserva != null)
+    {
+        <div class="alert alert-info">
+            <strong><i class="bi bi-info-circle"></i> Datos de la Reserva:</strong><br />
+            Inmueble ID: @reserva.IdInmueble | Inquilino ID: @reserva.IdInquilino | 
+            Periodo: @reserva.FechaDesde.ToShortDateString() al @reserva.FechaHasta.ToShortDateString()
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create" method="post" class="card p-4 shadow-sm">
+                <input type="hidden" asp-for="IdReserva" />
+                
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <div asp-validation-summary="All" class="text-danger mb-0"></div>
+                    </div>
+                }
+
+                <div class="form-group mb-3">
+                    <label asp-for="Concepto" class="control-label fw-bold">Concepto</label>
+                    <input asp-for="Concepto" class="form-control" placeholder="Ej: Mes de Enero, Depósito, etc." required />
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="FechaPago" class="control-label fw-bold">Fecha de Cobro</label>
+                        <input asp-for="FechaPago" type="date" class="form-control" required />
+                    </div>
+                    
+                    <div class="col-md-6 form-group">
+                        <label asp-for="Importe" class="control-label fw-bold">Importe ($)</label>
+                        <input asp-for="Importe" type="number" step="0.01" class="form-control" required />
+                    </div>
+                </div>
+                
+                <div class="form-group text-end">
+                    <a asp-controller="Reserva" asp-action="Details" asp-route-id="@Model.IdReserva" class="btn btn-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Emitir Recibo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

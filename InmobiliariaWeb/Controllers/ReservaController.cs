@@ -11,17 +11,20 @@ namespace InmobiliariaWeb.Controllers
         private readonly IRepositorioReserva repositorio;
         private readonly IRepositorioInquilino repoInquilino;
         private readonly IRepositorioInmueble repoInmueble;
+        private readonly IRepositorioPago repoPago;
         private readonly ILogger<ReservaController> logger;
 
         public ReservaController(
             IRepositorioReserva repo,
             IRepositorioInquilino repoInquilino,
             IRepositorioInmueble repoInmueble,
+            IRepositorioPago repoPago,
             ILogger<ReservaController> logger)
         {
             this.repositorio = repo;
             this.repoInquilino = repoInquilino;
             this.repoInmueble = repoInmueble;
+            this.repoPago = repoPago;
             this.logger = logger;
         }
 
@@ -51,6 +54,7 @@ namespace InmobiliariaWeb.Controllers
         {
             var entidad = repositorio.ObtenerPorId(id);
             if (entidad == null) return NotFound();
+            ViewBag.Pagos = repoPago.ObtenerPorReserva(id);
             return View(entidad);
         }
 

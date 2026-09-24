@@ -9,7 +9,7 @@ namespace InmobiliariaWeb.Repositorio
 
         private const string SelectBase = @"
             SELECT r.IdReserva, r.IdInquilino, r.IdInmueble, r.FechaDesde, r.FechaHasta,
-                   r.FechaHastaOriginal, r.FechaTerminacionAnticipada, r.Multa,
+                   r.FechaHastaOriginal, r.FechaTerminacionAnticipada, r.Multa, r.MontoPorDia,
                    inq.Nombre AS InqNombre, inq.Apellido AS InqApellido,
                    inm.Direccion AS InmDireccion
             FROM Reserva r
@@ -22,15 +22,24 @@ namespace InmobiliariaWeb.Repositorio
             {
                 IdReserva = reader.GetInt32("IdReserva"),
                 IdInquilino = reader.GetInt32("IdInquilino"),
-                InquilinoNombreCompleto = $"{reader.GetString("InqNombre")} {reader.GetString("InqApellido")}",
                 IdInmueble = reader.GetInt32("IdInmueble"),
-                InmuebleDireccion = reader.GetString("InmDireccion"),
                 FechaDesde = reader.GetDateTime("FechaDesde"),
                 FechaHasta = reader.GetDateTime("FechaHasta"),
                 FechaHastaOriginal = reader.GetDateTime("FechaHastaOriginal"),
                 FechaTerminacionAnticipada = reader.IsDBNull(reader.GetOrdinal("FechaTerminacionAnticipada"))
                     ? null : reader.GetDateTime("FechaTerminacionAnticipada"),
                 Multa = reader.IsDBNull(reader.GetOrdinal("Multa")) ? null : reader.GetDecimal("Multa"),
+                MontoPorDia = reader.GetDecimal("MontoPorDia"), 
+                
+                Inquilino = new Inquilino 
+                { 
+                    Nombre = reader.GetString("InqNombre"), 
+                    Apellido = reader.GetString("InqApellido") 
+                },
+                Inmueble = new Inmueble 
+                { 
+                    Direccion = reader.GetString("InmDireccion")
+                }
             };
         }
 
@@ -100,6 +109,7 @@ namespace InmobiliariaWeb.Repositorio
             command.Parameters.AddWithValue("@desde", r.FechaDesde.Date);
             command.Parameters.AddWithValue("@hasta", r.FechaHasta.Date);
             command.Parameters.AddWithValue("@hastaOriginal", r.FechaHasta.Date);
+            command.Parameters.AddWithValue("@montoPorDia", r.MontoPorDia);
             connection.Open();
             r.IdReserva = Convert.ToInt32(command.ExecuteScalar());
             return r.IdReserva;

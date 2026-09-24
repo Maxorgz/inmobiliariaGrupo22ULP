@@ -1,0 +1,143 @@
+@model InmobiliariaWeb.Models.Pago
+
+@{
+    ViewData["Title"] = "Detalle del Pago";
+}
+
+<div class="container mt-4">
+    <h2>Detalle del Recibo #@Model.IdPago</h2>
+    <hr />
+
+    <div class="card shadow-sm col-md-8 mx-auto @(Model.Estado ? "border-info" : "border-danger")">
+        <div
+            class="card-header @(Model.Estado ? "bg-info" : "bg-danger") text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-receipt"></i> Comprobante de Pago</h5>
+            @if (Model.Estado)
+            {
+                <span class="badge bg-success fs-6">Válido</span>
+            }
+            else
+            {
+                <span class="badge bg-dark fs-6">Anulado</span>
+            }
+        </div>
+
+        <div class="card-body p-4">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <span class="text-muted d-block">Reserva Asociada</span>
+                    <strong class="fs-5">#@Model.IdReserva</strong>
+                </div>
+                <div class="col-6 text-end">
+                    <span class="text-muted d-block">Fecha de Pago</span>
+                    <strong class="fs-5">@Model.FechaPago.ToShortDateString()</strong>
+                </div>
+            </div>
+
+            <hr />
+
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-muted mt-3">Concepto</dt>
+                <dd class="col-sm-8 mt-3 fs-5">@Model.Concepto</dd>
+
+                <dt class="col-sm-4 text-muted mt-3">Importe Abonado</dt>
+                <dd
+                    class="col-sm-8 mt-3 @(Model.Estado ? "text-success" : "text-muted text-decoration-line-through") fw-bold fs-3">
+                    $@Model.Importe
+                </dd>
+
+                <dt class="col-sm-4 text-muted mt-4 border-top pt-3"><i class="bi bi-person-badge"></i> Generado por
+                    (ID)</dt>
+                    <dd class="col-sm-8 mt-4 border-top pt-3">Usuario #@Model.IdUsuarioCreador</dd>
+
+                    @if (!Model.Estado && Model.IdUsuarioAnulador != null)
+                    {
+                        <dt class="col-sm-4 text-muted mt-2"><i class="bi bi-person-x"></i> Anulado por (ID)</dt>
+                        <dd class="col-sm-8 mt-2 text-danger fw-bold">Usuario #@Model.IdUsuarioAnulador</dd>
+                    }
+                </dl>
+            </div>
+
+            <h4 class="mt-5 mb-3 border-bottom pb-2"><i class="bi bi-cash-coin"></i> Historial de Pagos</h4>
+
+            <div class="mb-3 text-end">
+                <!-- Este botón llama al Create del PagoController pasándole el ID de esta reserva -->
+                <a asp-controller="Pago" asp-action="Create" asp-route-idReserva="@Model.IdReserva" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Emitir Nuevo Recibo
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped shadow-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nº Recibo</th>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Importe</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Pagos != null && ((IEnumerable<InmobiliariaWeb.Models.Pago>)ViewBag.Pagos).Any())
+                        {
+                            foreach (var pago in (IEnumerable<InmobiliariaWeb.Models.Pago>)ViewBag.Pagos)
+                            {
+                                <tr>
+                                    <td class="align-middle fw-bold">#@pago.IdPago</td>
+                                    <td class="align-middle">@pago.FechaPago.ToShortDateString()</td>
+                                    <td class="align-middle">@pago.Concepto</td>
+                                    <td
+                                        class="align-middle fw-bold $@(pago.Estado ? "text-success" : "text-danger text-decoration-line-through")">
+                                        $@pago.Importe
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (pago.Estado)
+                                        {
+                                            <span class="badge bg-success">Cobrado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Anulado</span>
+                                        }
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <a asp-controller="Pago" asp-action="Details" asp-route-id="@pago.IdPago"
+                                           class="btn btn-sm btn-info text-white" title="Ver Comprobante"><i
+                                            class="bi bi-eye"></i></a>
+                                            @if (pago.Estado)
+                                            {
+                                                <a asp-controller="Pago" asp-action="Edit" asp-route-id="@pago.IdPago"
+                                                   class="btn btn-sm btn-warning" title="Editar Concepto"><i class="bi bi-pencil"></i></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">No hay pagos registrados para esta reserva.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer bg-light py-3 d-flex justify-content-end align-items-center">
+                    @if (Model.Estado)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.IdPago" class="btn btn-warning me-2">Editar Concepto</a>
+
+                        <form asp-action="Anular" asp-route-id="@Model.IdPago" method="post" class="d-inline me-2"
+                              onsubmit="return confirm('¿Esta seguro que desea anular este pago? ');">
+                            <button type="submit" class="btn btn-danger">Anular Pago</button>
+                        </form>
+                    }
+                    <a asp-controller="Reserva" asp-action="Details" asp-route-id="@Model.IdReserva"
+                       class="btn btn-secondary">Volver a la Reserva</a>
+                </div>
+            </div>
+        </div>

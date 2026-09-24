@@ -43,12 +43,8 @@
                 {
                     <tr>
                         <td class="align-middle fw-bold">@item.IdReserva</td>
-                        <td class="align-middle">
-                            @item.InquilinoNombreCompleto
-                        </td>
-                        <td class="align-middle">
-                            @item.InmuebleDireccion
-                        </td>
+                        <td>@(item.Inquilino?.Nombre) @(item.Inquilino?.Apellido)</td>
+                        <td>@(item.Inmueble?.Direccion)</td>
                         <td class="align-middle">@item.FechaDesde.ToShortDateString()</td>
                         <td class="align-middle">@item.FechaHasta.ToShortDateString()</td>
                         <td class="align-middle">

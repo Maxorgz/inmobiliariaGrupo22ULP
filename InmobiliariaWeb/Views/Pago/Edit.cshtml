@@ -1,0 +1,46 @@
+@model InmobiliariaWeb.Models.Pago
+
+@{
+    ViewData["Title"] = "Editar Concepto de Pago";
+}
+
+<div class="container mt-4">
+    <h2>Editar Pago #@Model.IdPago</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post" class="card p-4 shadow-sm border-warning">
+                <input type="hidden" asp-for="IdPago" />
+                <input type="hidden" asp-for="IdReserva" />
+
+                <div class="alert alert-warning small">
+                    <i class="bi bi-exclamation-triangle"></i> Por motivos de auditoría, <strong>solo se permite modificar el concepto</strong>. Si el importe es incorrecto, debe anular este pago y generar uno nuevo.
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Concepto" class="control-label fw-bold">Concepto</label>
+                    <input asp-for="Concepto" class="form-control" required />
+                    <span asp-validation-for="Concepto" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6 form-group">
+                        <label class="control-label text-muted">Fecha de Cobro (Bloqueado)</label>
+                        <input asp-for="FechaPago" type="date" class="form-control bg-light" readonly />
+                    </div>
+                    
+                    <div class="col-md-6 form-group">
+                        <label class="control-label text-muted">Importe (Bloqueado)</label>
+                        <input asp-for="Importe" type="number" class="form-control bg-light" readonly />
+                    </div>
+                </div>
+                
+                <div class="form-group text-end">
+                    <a asp-controller="Reserva" asp-action="Details" asp-route-id="@Model.IdReserva" class="btn btn-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-warning">Guardar Concepto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

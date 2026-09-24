@@ -10,12 +10,14 @@ namespace InmobiliariaWeb.Models
         [Required(ErrorMessage = "Debe seleccionar un inquilino")]
         public int IdInquilino { get; set; }
 
-        public string? InquilinoNombreCompleto { get; set; }
-
         [Required(ErrorMessage = "Debe seleccionar un inmueble")]
         public int IdInmueble { get; set; }
 
-        public string? InmuebleDireccion { get; set; }
+        [ForeignKey("IdInquilino")]
+        public Inquilino? Inquilino { get; set; }
+
+        [ForeignKey("IdInmueble")]
+        public Inmueble? Inmueble { get; set; }
 
         [Required(ErrorMessage = "La fecha de inicio es obligatoria")]
         [DataType(DataType.Date)]
@@ -25,10 +27,8 @@ namespace InmobiliariaWeb.Models
         [DataType(DataType.Date)]
         public DateTime FechaHasta { get; set; }
 
-
         [DataType(DataType.Date)]
         public DateTime FechaHastaOriginal { get; set; }
-
 
         [DataType(DataType.Date)]
         public DateTime? FechaTerminacionAnticipada { get; set; }

@@ -1,0 +1,138 @@
+HTML
+@model InmobiliariaWeb.Models.Reserva
+
+@{
+    ViewData["Title"] = "Detalles de la Reserva";
+
+    int cantidadDias = (Model.FechaHasta - Model.FechaDesde).Days;
+    decimal precioPorDia = Model.MontoPorDia;
+    decimal montoTotal = cantidadDias * precioPorDia;
+
+    var listaPagos = ViewBag.Pagos as IEnumerable<InmobiliariaWeb.Models.Pago>;
+    decimal totalPagado = listaPagos != null ? listaPagos.Where(p => p.Estado).Sum(p => p.Importe) : 0;
+    decimal saldoPendiente = montoTotal - totalPagado;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Panel de Reserva #@Model.IdReserva</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary">Volver al Listado</a>
+    </div>
+
+    @if (TempData.ContainsKey("Mensaje"))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row mb-4 mt-4">
+        <div class="col-md-4">
+            <div class="card border-secondary shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-muted text-uppercase fw-bold mb-1">Costo Total (@cantidadDias días)</h6>
+                    <h3 class="mb-0">$@montoTotal</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-success bg-success bg-opacity-10 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-success text-uppercase fw-bold mb-1">Total Abonado</h6>
+                    <h3 class="text-success mb-0">$@totalPagado</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card @(saldoPendiente <= 0 ? "border-info bg-info text-white" : "border-danger bg-danger text-white") shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-uppercase fw-bold mb-1">
+                        @(saldoPendiente <= 0 ? "Saldado" : "Saldo Pendiente")
+                    </h6>
+                    <h3 class="mb-0">$@Math.Max(0, saldoPendiente)</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Datos de la Estadía</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 border-end">
+                    <p class="mb-2"><strong><i class="bi bi-person"></i> Inquilino:</strong> @(Model.Inquilino != null ? Model.Inquilino.Nombre + " " + Model.Inquilino.Apellido : $"ID {Model.IdInquilino}")</p>
+                    <p class="mb-0"><strong><i class="bi bi-house"></i> Inmueble:</strong> @(Model.Inmueble != null ? Model.Inmueble.Direccion : $"ID {Model.IdInmueble}")</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-2"><strong>Fecha de Ingreso:</strong> @Model.FechaDesde.ToShortDateString()</p>
+                    <p class="mb-0"><strong>Fecha de Egreso:</strong> @Model.FechaHasta.ToShortDateString()</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mb-3 border-bottom pb-2"><i class="bi bi-cash-coin"></i> Historial de Pagos</h4>
+    
+    <div class="mb-3 text-end">
+        <a asp-controller="Pago" asp-action="Create" asp-route-idReserva="@Model.IdReserva" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Emitir Nuevo Recibo
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nº Recibo</th>
+                    <th>Fecha</th>
+                    <th>Concepto</th>
+                    <th>Importe</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Pagos != null && ((IEnumerable<InmobiliariaWeb.Models.Pago>)ViewBag.Pagos).Any())
+                {
+                    foreach (var pago in (IEnumerable<InmobiliariaWeb.Models.Pago>)ViewBag.Pagos)
+                    {
+                        <tr>
+                            <td class="align-middle fw-bold">#@pago.IdPago</td>
+                            <td class="align-middle">@pago.FechaPago.ToShortDateString()</td>
+                            <td class="align-middle">@pago.Concepto</td>
+                            <td class="align-middle fw-bold $@(pago.Estado ? "text-success" : "text-danger text-decoration-line-through")">
+                                $@pago.Importe
+                            </td>
+                            <td class="align-middle">
+                                @if (pago.Estado)
+                                {
+                                    <span class="badge bg-success">Cobrado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Anulado</span>
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                <a asp-controller="Pago" asp-action="Details" asp-route-id="@pago.IdPago" class="btn btn-sm btn-info text-white" title="Ver Comprobante"><i class="bi bi-eye"></i></a>
+                                @if(pago.Estado)
+                                {
+                                    <a asp-controller="Pago" asp-action="Edit" asp-route-id="@pago.IdPago" class="btn btn-sm btn-warning" title="Editar Concepto"><i class="bi bi-pencil"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-3">No hay pagos registrados para esta reserva.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
