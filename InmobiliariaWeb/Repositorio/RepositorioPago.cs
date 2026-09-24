@@ -8,12 +8,17 @@ namespace InmobiliariaWeb.Repositorio
     {
         public RepositorioPago(IConfiguration configuration) : base(configuration) { }
 
-        public IList<Pago> ObtenerTodos()
+        public IList<Pago> ObtenerTodos(int pagina, int tamanio)
         {
             var lista = new List<Pago>();
             using var connection = new MySqlConnection(connectionString);
-            var sql = "SELECT IdPago, IdReserva, Concepto, FechaPago, Importe, Estado, IdUsuarioCreador, IdUsuarioAnulador FROM Pago";
+            var sql = @"SELECT IdPago, IdReserva, Concepto, FechaPago, Importe, Estado, IdUsuarioCreador, IdUsuarioAnulador 
+                        FROM Pago 
+                        ORDER BY FechaPago DESC
+                        LIMIT tamanio OFFSET @offset";
             using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@tamanio", tamanio);
+            command.Parameters.AddWithValue("@offset", (pagina - 1) * tamanio);
             connection.Open();
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -32,6 +37,15 @@ namespace InmobiliariaWeb.Repositorio
             }
             return lista;
         }
+
+            public int ObtenerCantidad()
+            {
+                using var connection = new MySqlConnection(connectionString);
+                var sql = "SELECT COUNT(*) FROM Pago";
+                using var command = new MySqlCommand(sql, connection);
+                connection.Open();
+                return Convert.ToInt32(command.ExecuteScalar());
+            }
 
         public IList<Pago> ObtenerPorReserva(int idReserva)
         {
