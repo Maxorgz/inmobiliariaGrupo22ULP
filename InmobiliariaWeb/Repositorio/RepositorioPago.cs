@@ -15,7 +15,7 @@ namespace InmobiliariaWeb.Repositorio
             var sql = @"SELECT IdPago, IdReserva, Concepto, FechaPago, Importe, Estado, IdUsuarioCreador, IdUsuarioAnulador 
                         FROM Pago 
                         ORDER BY FechaPago DESC
-                        LIMIT tamanio OFFSET @offset";
+                        LIMIT @tamanio OFFSET @offset";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@tamanio", tamanio);
             command.Parameters.AddWithValue("@offset", (pagina - 1) * tamanio);
