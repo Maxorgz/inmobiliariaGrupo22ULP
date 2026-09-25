@@ -50,11 +50,6 @@ namespace InmobiliariaWeb.Controllers
 
         public ActionResult Create(int idReserva)
         {
-            if (idReserva == 0)
-            {
-                TempData["Error"] = "Para emitir un recibo, debe ingresar desde los detalles de la reserva.";
-                return RedirectToAction("Index", "Reserva");
-            }
             var reserva = repoReserva.ObtenerPorId(idReserva);
             if (reserva == null) return NotFound();
 
@@ -69,13 +64,8 @@ namespace InmobiliariaWeb.Controllers
         {
             try
             {
-                ModelState.Remove("Reserva");
-                ModelState.Remove("IdUsuarioCreador");
-                if (!ModelState.IsValid) 
-                {
-                    ViewBag.Reserva = repoReserva.ObtenerPorId(entidad.IdReserva);
-                    return View(entidad);
-                }
+                if (!ModelState.IsValid) return View(entidad);
+
                 entidad.IdUsuarioCreador = IdUsuarioTemporal;
                 repositorio.Alta(entidad);
                 TempData["Mensaje"] = "Pago registrado correctamente";
