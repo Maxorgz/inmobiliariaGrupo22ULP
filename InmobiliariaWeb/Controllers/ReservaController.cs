@@ -13,7 +13,7 @@ namespace InmobiliariaWeb.Controllers
         private readonly IRepositorioInmueble repoInmueble;
         private readonly IRepositorioPago repoPago;
         private readonly ILogger<ReservaController> logger;
-
+        private const int IdUsuarioTemporal = 1;
         public ReservaController(
             IRepositorioReserva repo,
             IRepositorioInquilino repoInquilino,
@@ -110,7 +110,22 @@ namespace InmobiliariaWeb.Controllers
                 entidad.MontoPorDia = inmueble.PrecioPorDia;
 
                 repositorio.Alta(entidad);
-                TempData["Mensaje"] = "Reserva creada correctamente";
+
+                int cantidadDias = (entidad.FechaHasta - entidad.FechaDesde).Days;
+                decimal montoTotal = cantidadDias * inmueble.PrecioPorDia;
+                decimal montoSenia = montoTotal * (inmueble.PorcentajeReserva / 100m);
+
+                var senia = new Pago
+                {
+                    IdReserva = entidad.IdReserva,
+                    Concepto = "Seña inicial",
+                    FechaPago = DateTime.Today,
+                    Importe = montoSenia,
+                    IdUsuarioCreador = IdUsuarioTemporal
+                };
+                repoPago.Alta(senia);
+
+                TempData["Mensaje"] = "Reserva creada correctamente, se generó la seña inicial";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
