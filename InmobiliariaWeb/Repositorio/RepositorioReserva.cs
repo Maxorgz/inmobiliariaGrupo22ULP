@@ -100,8 +100,8 @@ namespace InmobiliariaWeb.Repositorio
         {
             using var connection = new MySqlConnection(connectionString);
             var sql = @"INSERT INTO Reserva
-                        (IdInquilino, IdInmueble, FechaDesde, FechaHasta, FechaHastaOriginal)
-                        VALUES (@idInquilino, @idInmueble, @desde, @hasta, @hastaOriginal);
+                        (IdInquilino, IdInmueble, FechaDesde, FechaHasta, FechaHastaOriginal, MontoPorDia)
+                        VALUES (@idInquilino, @idInmueble, @desde, @hasta, @hastaOriginal, @MontoPorDia);
                         SELECT LAST_INSERT_ID();";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@idInquilino", r.IdInquilino);

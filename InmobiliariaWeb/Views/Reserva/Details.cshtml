@@ -1,4 +1,3 @@
-HTML
 @model InmobiliariaWeb.Models.Reserva
 
 @{
@@ -117,10 +116,10 @@ HTML
                                 }
                             </td>
                             <td class="align-middle text-center">
-                                <a asp-controller="Pago" asp-action="Details" asp-route-id="@pago.IdPago" class="btn btn-sm btn-info text-white" title="Ver Comprobante"><i class="bi bi-eye"></i></a>
+                                <a asp-controller="Pago" asp-action="Details" asp-route-id="@pago.IdPago" class="btn btn-sm btn-info text-white" title="Ver Comprobante"><i class="bi bi-eye"></i>Ver</a>
                                 @if(pago.Estado)
                                 {
-                                    <a asp-controller="Pago" asp-action="Edit" asp-route-id="@pago.IdPago" class="btn btn-sm btn-warning" title="Editar Concepto"><i class="bi bi-pencil"></i></a>
+                                    <a asp-controller="Pago" asp-action="Edit" asp-route-id="@pago.IdPago" class="btn btn-sm btn-warning" title="Editar Concepto"><i class="bi bi-pencil">Editar</i></a>
                                 }
                             </td>
                         </tr>
