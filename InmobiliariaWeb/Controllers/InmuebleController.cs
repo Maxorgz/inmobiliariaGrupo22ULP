@@ -63,6 +63,15 @@ namespace InmobiliariaWeb.Controllers
             var res = repoPropietario.BuscarPorNombre(q);
             return Json(new { Datos = res });
         }
+
+        [HttpGet]
+        [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+        public IActionResult ObtenerCatalogoJson()
+        {
+            var inmuebles = repositorio.ObtenerTodos();
+            return Json(new { datos = inmuebles });
+        }
+
         public ActionResult Create()
         {
             ViewBag.Propietarios = repoPropietario.ObtenerTodos();
