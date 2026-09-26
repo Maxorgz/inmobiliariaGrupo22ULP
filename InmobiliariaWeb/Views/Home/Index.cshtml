@@ -6,32 +6,41 @@
     .transition-hover {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
     .transition-hover:hover {
         transform: translateY(-5px);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
     }
 
-    .tarjetas-animadas-enter-active, .tarjetas-animadas-leave-active {
+    .tarjetas-animadas-enter-active,
+    .tarjetas-animadas-leave-active {
         transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-    .tarjetas-animadas-enter-from, .tarjetas-animadas-leave-to {
+
+    .tarjetas-animadas-enter-from,
+    .tarjetas-animadas-leave-to {
         opacity: 0;
         transform: translateY(40px) scale(0.8);
     }
+
     .tarjetas-animadas-move {
         transition: transform 0.6s ease;
     }
+
     .tarjetas-animadas-leave-active {
         position: absolute;
         z-index: -1;
     }
-    [v-cloak] { display: none; }
+
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <div class="container mt-4">
     <div class="p-5 text-center bg-white rounded-3 shadow-sm mb-5 border-top border-primary border-4">
         <h1 class="display-4 fw-bold text-primary">Inmobiliaria Grupo 22</h1>
-        <p class="lead text-secondary mt-3">Sistema de gestión integral de alquileres.</p>
+        <p class="lead text-secondary mt-3">Sistema de gestion integral de alquileres.</p>
     </div>
 
     <div class="row justify-content-center g-4 mb-5">
@@ -41,7 +50,7 @@
                     <div class="display-4 mb-3 text-primary"><i class="bi bi-person-badge"></i></div>
                     <h3 class="card-title text-dark">Propietarios</h3>
                     <p class="card-text text-secondary mb-4">
-                        Gestión de Propietarios, sus datos de contacto y la información personal.
+                        Gestion de Propietarios, sus datos de contacto y la informacion personal.
                     </p>
                     <a asp-controller="Propietario" asp-action="Index" class="btn btn-outline-primary mt-auto px-4">
                         Ir a Propietarios
@@ -51,74 +60,79 @@
         </div>
 
         <div class="col-md-5">
+            
             <div class="card h-100 shadow-sm border-0 transition-hover bg-light">
-                <div class="card-body text-center p-4 d-flex flex-column">
-                    <div class="display-4 mb-3 text-info"><i class="bi bi-people"></i></div>
-                    <h3 class="card-title text-dark">Inquilinos</h3>
-                    <p class="card-text text-secondary mb-4">
-                        Gestion de Inquilinos, tel de contacto y direcciones de correo.
-                    </p>
-                    <a asp-controller="Inquilino" asp-action="Index" class="btn btn-outline-info mt-auto px-4">
-                        Ir a Inquilinos
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <hr class="my-5 text-muted">
-
-    <div id="app-catalogo" v-cloak>
-        <div class="text-center mb-4">
-            <h2 class="fw-bold text-primary"><i class="bi bi-search"></i> Catálogo de Inmuebles</h2>
-            <p class="text-muted">Búsqueda rápida en tiempo real</p>
-        </div>
-
-        <div class="card shadow-sm p-4 mb-5 border-0 bg-white">
-            <div class="row align-items-center">
-                <div class="col-md-6 mb-3 mb-md-0">
-                    <label class="fw-bold text-secondary mb-2">Buscar por Dirección o Tipo</label>
-                    <input type="text" v-model="busquedaTexto" class="form-control" placeholder="Ej: San Luis, Casa, Departamento...">
-                </div>
-                <div class="col-md-6">
-                    <label class="fw-bold text-secondary mb-2">
-                        Precio Máximo: <span class="text-success fs-5">${{ precioMaximoFiltro }}</span>
-                    </label>
-                    <input type="range" class="form-range" v-model="precioMaximoFiltro" min="0" :max="precioTopeAbsoluto" step="1000">
-                </div>
-            </div>
-        </div>
-
-        <div v-if="cargando" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status"></div>
-            <h5 class="mt-3 text-muted">Cargando propiedades...</h5>
-        </div>
-
-        <div class="row position-relative">
-            <transition-group name="tarjetas-animadas">
-                <div class="col-md-4 mb-4" v-for="inmueble in inmueblesFiltrados" :key="inmueble.idInmueble">
-                    <div class="card h-100 shadow-sm border-0 bg-white transition-hover">
-                        <div class="card-body">
-                            <span class="badge bg-info mb-2 fs-6">{{ inmueble.tipoInmuebleDescripcion || 'Inmueble' }}</span>
-                            <h4 class="card-title fw-bold">{{ inmueble.direccion }}</h4>
-                            <hr>
-                            <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="fs-4 text-success fw-bold">${{ inmueble.precioPorDia }}</span>
-                                <a :href="`/Reserva/Create?idInmueble=${inmueble.idInmueble}`" class="btn btn-sm btn-primary">Reservar</a>
-                            </div>
-                        </div>
+                    <div class="card-body text-center p-4 d-flex flex-column">
+                        <div class="display-4 mb-3 text-info"><i class="bi bi-people"></i></div>
+                        <h3 class="card-title text-dark">Inquilinos</h3>
+                        <p class="card-text text-secondary mb-4">
+                            Gestion de Inquilinos, tel de contacto y direcciones de correo.
+                        </p>
+                        <a asp-controller="Inquilino" asp-action="Index" class="btn btn-outline-info mt-auto px-4">
+                            Ir a Inquilinos
+                        </a>
                     </div>
                 </div>
-            </transition-group>
+            </div>
         </div>
 
-        <div v-if="inmueblesFiltrados.length === 0 && !cargando" class="text-center py-5">
-            <h3 class="text-muted">No encontramos inmuebles con esos filtros.</h3>
-        </div>
-    </div>
-</div>
+        <hr class="my-5 text-muted">
 
-@section Scripts {
+        <div id="app-catalogo" v-cloak>
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-primary"><i class="bi bi-search"></i> Catálogo de Inmuebles</h2>
+                <p class="text-muted">Búsqueda rápida en tiempo real</p>
+            </div>
+
+            <div class="card shadow-sm p-4 mb-5 border-0 bg-white">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label class="fw-bold text-secondary mb-2">Buscar por Dirección o Tipo</label>
+                        <input type="text" v-model="busquedaTexto" class="form-control"
+                               placeholder="Ej: San Luis, Casa, Departamento...">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="fw-bold text-secondary mb-2">
+                            Precio Máximo: <span class="text-success fs-5">${{ precioMaximoFiltro }}</span>
+                        </label>
+                        <input type="range" class="form-range" v-model="precioMaximoFiltro" min="0"
+                               :max="precioTopeAbsoluto" step="1000">
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="cargando" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <h5 class="mt-3 text-muted">Cargando propiedades...</h5>
+            </div>
+
+            <div class="row position-relative">
+                <transition-group name="tarjetas-animadas">
+                    <div class="col-md-4 mb-4" v-for="inmueble in inmueblesFiltrados" :key="inmueble.idInmueble">
+                        <div class="card h-100 shadow-sm border-0 bg-white transition-hover">
+                            <div class="card-body">
+                                <span class="badge bg-info mb-2 fs-6">{{ inmueble.tipoInmuebleDescripcion || 'Inmueble'
+                                    }}</span>
+                                    <h4 class="card-title fw-bold">{{ inmueble.direccion }}</h4>
+                                    <hr>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <span class="fs-4 text-success fw-bold">${{ inmueble.precioPorDia }}</span>
+                                        <a :href="`/Reserva/Create?idInmueble=${inmueble.idInmueble}`"
+                                           class="btn btn-sm btn-primary">Reservar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition-group>
+                </div>
+
+                <div v-if="inmueblesFiltrados.length === 0 && !cargando" class="text-center py-5">
+                    <h3 class="text-muted">No encontramos inmuebles con esos filtros.</h3>
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         const { createApp, ref, computed, onMounted } = Vue;
@@ -133,17 +147,17 @@
 
                 onMounted(async () => {
                     try {
-                        const response = await fetch('/Inmueble/ObtenerCatálogoJson');
+                        const response = await fetch('/Inmueble/ObtenerCatalogoJson');
                         const data = await response.json();
-                        inmuebles.value = data.datos;
+                        inmuebles.value = data.datos || data.Datos; // Soporta "datos" o "Datos"
                         
                         if (inmuebles.value.length > 0) {
-                            const maxPrecio = Math.max(...inmuebles.value.map(i => i.precioPorDia));
+                            const maxPrecio = Math.max(...inmuebles.value.map(i => i.PrecioPorDia || i.precioPorDia || 0));
                             precioTopeAbsoluto.value = maxPrecio;
                             precioMaximoFiltro.value = maxPrecio;
                         }
                     } catch (error) {
-                        console.error('Error cargando el catálogo:', error);
+                        console.error('Error cargando el catalogo:', error);
                     } finally {
                         cargando.value = false;
                     }
@@ -151,11 +165,16 @@
 
                 const inmueblesFiltrados = computed(() => {
                     return inmuebles.value.filter(inmueble => {
+                        const dir = inmueble.Direccion || inmueble.direccion || '';
+                        const tipo = inmueble.TipoInmuebleDescripcion || inmueble.tipoInmuebleDescripcion || '';
+                        const precio = inmueble.PrecioPorDia || inmueble.precioPorDia || 0;
+
                         const coincideTexto = busquedaTexto.value === '' || 
-                            inmueble.direccion.toLowerCase().includes(busquedaTexto.value.toLowerCase()) ||
-                            (inmueble.tipoInmuebleDescripcion && inmueble.tipoInmuebleDescripcion.toLowerCase().includes(busquedaTexto.value.toLowerCase()));
+                            dir.toLowerCase().includes(busquedaTexto.value.toLowerCase()) ||
+                            tipo.toLowerCase().includes(busquedaTexto.value.toLowerCase());
                             
-                        const coincidePrecio = inmueble.precioPorDia <= precioMaximoFiltro.value;
+                        const coincidePrecio = precio <= precioMaximoFiltro.value;
+                        
                         return coincideTexto && coincidePrecio;
                     });
                 });

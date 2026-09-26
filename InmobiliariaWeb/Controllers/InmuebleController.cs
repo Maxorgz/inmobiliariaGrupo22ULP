@@ -85,12 +85,26 @@ namespace InmobiliariaWeb.Controllers
         {
             try
             {
+                if (entidad.ArchivoImagen != null && entidad.ArchivoImagen.Length > 0)
+                {
+                    using (var ms = new System.IO.MemoryStream())
+                    {
+                        entidad.ArchivoImagen.CopyTo(ms);
+                        byte[] fileBytes = ms.ToArray();
+                        entidad.ImagenBase64 = Convert.ToBase64String(fileBytes);
+                    }
+                }
+
+                ModelState.Remove("Propietario");
+                ModelState.Remove("TipoInmueble");
+
                 if (!ModelState.IsValid)
                 {
                     ViewBag.Propietarios = repoPropietario.ObtenerTodos();
                     ViewBag.TiposInmueble = repoTipo.ObtenerTodos();
                     return View(entidad);
                 }
+                
                 repositorio.Alta(entidad);
                 TempData["Mensaje"] = "Inmueble creado correctamente";
                 return RedirectToAction(nameof(Index));
@@ -122,6 +136,19 @@ namespace InmobiliariaWeb.Controllers
             {
                 var i = repositorio.ObtenerPorId(id);
                 if (i == null) return NotFound();
+                if (entidad.ArchivoImagen != null && entidad.ArchivoImagen.Length > 0)
+                {
+                    using (var ms = new System.IO.MemoryStream())
+                    {
+                        entidad.ArchivoImagen.CopyTo(ms);
+                        byte[] fileBytes = ms.ToArray();
+                        i.ImagenBase64 = Convert.ToBase64String(fileBytes); 
+                    }
+                }
+
+                ModelState.Remove("Propietario");
+                ModelState.Remove("TipoInmueble");
+
                 if (!ModelState.IsValid)
                 {
                     ViewBag.Propietarios = repoPropietario.ObtenerTodos();
@@ -137,6 +164,7 @@ namespace InmobiliariaWeb.Controllers
                 i.PrecioPorDia = entidad.PrecioPorDia;
                 i.PorcentajeReserva = entidad.PorcentajeReserva;
                 i.IdPropietario = entidad.IdPropietario;
+                
                 repositorio.Modificacion(i);
 
                 TempData["Mensaje"] = "Datos guardados correctamente";

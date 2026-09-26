@@ -85,11 +85,18 @@ namespace InmobiliariaWeb.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return View(entidad);
+                if (!ModelState.IsValid) 
+                {
+                    ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+                    return View(entidad);
+                }
 
                 if (entidad.FechaHasta <= entidad.FechaDesde)
                 {
                     ModelState.AddModelError("", "La fecha de fin debe ser posterior a la fecha de inicio");
+                    ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
                     return View(entidad);
                 }
 
@@ -98,6 +105,8 @@ namespace InmobiliariaWeb.Controllers
                 if (solapa)
                 {
                     ModelState.AddModelError("", "El inmueble ya se encuentra reservado en esas fechas");
+                    ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
                     return View(entidad);
                 }
 
@@ -105,10 +114,12 @@ namespace InmobiliariaWeb.Controllers
                 if (inmueble == null)
                 {
                     ModelState.AddModelError("", "El inmueble seleccionado no existe");
+                    ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
                     return View(entidad);
                 }
+                
                 entidad.MontoPorDia = inmueble.PrecioPorDia;
-
                 repositorio.Alta(entidad);
 
                 int cantidadDias = (entidad.FechaHasta - entidad.FechaDesde).Days;
@@ -132,6 +143,8 @@ namespace InmobiliariaWeb.Controllers
             {
                 logger.LogError(ex, "Error en Create");
                 ModelState.AddModelError("", "Ocurrió un error al guardar: " + ex.Message);
+                ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
                 return View(entidad);
             }
         }
@@ -147,7 +160,7 @@ namespace InmobiliariaWeb.Controllers
             return View(entidad);
         }
 
-        [HttpPost]
+       [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Reserva entidad)
         {
@@ -155,11 +168,19 @@ namespace InmobiliariaWeb.Controllers
             {
                 var r = repositorio.ObtenerPorId(id);
                 if (r == null) return NotFound();
-                if (!ModelState.IsValid) return View(entidad);
+                
+                if (!ModelState.IsValid) 
+                {
+                    ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+                    return View(entidad);
+                }
 
                 if (entidad.FechaHasta <= entidad.FechaDesde)
                 {
                     ModelState.AddModelError("", "La fecha de fin debe ser posterior a la fecha de inicio");
+                    ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
                     return View(entidad);
                 }
 
@@ -168,6 +189,8 @@ namespace InmobiliariaWeb.Controllers
                 if (solapa)
                 {
                     ModelState.AddModelError("", "El inmueble ya se encuentra reservado en esas fechas");
+                    ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                    ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
                     return View(entidad);
                 }
 
@@ -176,6 +199,7 @@ namespace InmobiliariaWeb.Controllers
                 r.FechaDesde = entidad.FechaDesde;
                 r.FechaHasta = entidad.FechaHasta;
                 repositorio.Modificacion(r);
+                
                 TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }
@@ -183,6 +207,8 @@ namespace InmobiliariaWeb.Controllers
             {
                 logger.LogError(ex, "Error en Edit");
                 ModelState.AddModelError("", "Ocurrió un error al guardar: " + ex.Message);
+                ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
+                ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
                 return View(entidad);
             }
         }
