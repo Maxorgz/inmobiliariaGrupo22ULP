@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Inmueble (
     PrecioPorDia DECIMAL(10,2) NOT NULL,
     PorcentajeReserva DECIMAL(5,2) NOT NULL DEFAULT 30.00,
     -- ImagenPortada VARCHAR(255),
-    ImagenBase64 VARCHAR (255),
+    ImagenBase64 LONGTEXT,
     IdPropietario INT NOT NULL,
     Disponible BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (IdTipoInmueble) REFERENCES TipoInmueble(IdTipoInmueble),
