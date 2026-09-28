@@ -32,12 +32,10 @@ CREATE TABLE IF NOT EXISTS Inmueble (
     Direccion VARCHAR(150) NOT NULL,
     Cupo INT NOT NULL,
     IdTipoInmueble INT NOT NULL,
-    Latitud DECIMAL(10,7),
-    Longitud DECIMAL(10,7),
+    Latitud DECIMAL(20,15),
+    Longitud DECIMAL(20,15),
     PrecioPorDia DECIMAL(10,2) NOT NULL,
     PorcentajeReserva DECIMAL(5,2) NOT NULL DEFAULT 30.00,
-    -- ImagenPortada VARCHAR(255),
-    ImagenBase64 LONGTEXT,
     IdPropietario INT NOT NULL,
     Disponible BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (IdTipoInmueble) REFERENCES TipoInmueble(IdTipoInmueble),
@@ -58,6 +56,13 @@ CREATE TABLE IF NOT EXISTS Reserva (
     FOREIGN KEY (IdInmueble) REFERENCES Inmueble(IdInmueble)
 );
 
+CREATE TABLE IF NOT EXISTS Imagen (
+    IdImagen INT AUTO_INCREMENT PRIMARY KEY,
+    IdInmueble INT NOT NULL,
+    Url VARCHAR(255) NOT NULL,
+    FOREIGN KEY (IdInmueble) REFERENCES Inmueble(IdInmueble) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS Usuario (
     IdUsuario INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(50) NOT NULL,
@@ -70,8 +75,8 @@ CREATE TABLE IF NOT EXISTS Usuario (
 
 INSERT INTO Usuario (Nombre, Apellido, Email, Clave, Rol)
 VALUES 
-('Admin', 'Principal', 'admin@inmobiliaria.com', 'MgBlCNtvcaZhXV7brpLy9tCYbd/1Qiu4rG6HG/5aybs=', 1)
-('Empleado', 'Prueba', 'empleado@inmobiliaria.com', 'Abfz4dl5gopn9c/Q+LQUXuoBt4WF3fDWWk2B82463wM=', 2)
+('Admin', 'Principal', 'admin@inmobiliaria.com', 'zTZWq+SlXS5J1OYaJ5rk0CPnyP7KQwsnTAH1DCGbtBY=', 1),
+('Empleado', 'Prueba', 'empleado@inmobiliaria.com', 'zXrXG3EEC1S3+E8YoNPzW0tabKZlWdpP30kgP5ilJo4=', 2)
 ON DUPLICATE KEY UPDATE Email = Email;
 
 CREATE TABLE IF NOT EXISTS Pago (
