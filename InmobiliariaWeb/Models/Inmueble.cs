@@ -26,6 +26,10 @@ namespace InmobiliariaWeb.Models
 
         [Range(-180, 180, ErrorMessage = "Longitud inválida")]
         public decimal? Longitud { get; set; }
+        public string? RutaImagen { get; set; }
+
+        [NotMapped]
+        public IFormFile? ArchivoImagen { get; set; }
 
         [Required(ErrorMessage = "El precio por día es obligatorio")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
@@ -34,11 +38,6 @@ namespace InmobiliariaWeb.Models
         [Required(ErrorMessage = "El porcentaje de seña es obligatorio")]
         [Range(0, 100, ErrorMessage = "El porcentaje debe estar entre 0 y 100")]
         public decimal PorcentajeReserva { get; set; }
-
-        public string? ImagenBase64 { get; set; }
-
-        [NotMapped]
-        public IFormFile? ArchivoImagen { get; set; }
 
         [Required(ErrorMessage = "Debe seleccionar un propietario")]
         public int IdPropietario { get; set; }

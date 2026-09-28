@@ -6,9 +6,10 @@ namespace InmobiliariaWeb.Repositorio
     public class RepositorioInmueble : RepositorioBase, IRepositorioInmueble
     {
         public RepositorioInmueble(IConfiguration configuration) : base(configuration) { }
+        
         private const string SelectBase = @"
             SELECT i.IdInmueble, i.Direccion, i.Cupo, i.IdTipoInmueble, i.Latitud, i.Longitud,
-                   i.PrecioPorDia, i.PorcentajeReserva, i.IdPropietario, i.Disponible, i.ImagenBase64,
+                   i.PrecioPorDia, i.PorcentajeReserva, i.IdPropietario, i.Disponible,
                    t.Descripcion AS TipoDescripcion,
                    p.Nombre AS PropNombre, p.Apellido AS PropApellido
             FROM Inmueble i
@@ -30,8 +31,7 @@ namespace InmobiliariaWeb.Repositorio
                 PorcentajeReserva = reader.GetDecimal("PorcentajeReserva"),
                 IdPropietario = reader.GetInt32("IdPropietario"),
                 PropietarioNombreCompleto = $"{reader.GetString("PropNombre")} {reader.GetString("PropApellido")}",
-                Disponible = reader.GetBoolean("Disponible"),
-                ImagenBase64 = reader.IsDBNull(reader.GetOrdinal("ImagenBase64")) ? null : reader.GetString("ImagenBase64")
+                Disponible = reader.GetBoolean("Disponible")
             };
         }
 
@@ -121,8 +121,8 @@ namespace InmobiliariaWeb.Repositorio
         {
             using var connection = new MySqlConnection(connectionString);
             var sql = @"INSERT INTO Inmueble
-                        (Direccion, Cupo, IdTipoInmueble, Latitud, Longitud, PrecioPorDia, PorcentajeReserva, IdPropietario, Disponible, ImagenBase64)
-                        VALUES (@direccion, @cupo, @idTipo, @lat, @lon, @precio, @porcentaje, @idProp, @disponible, @imagenBase64);
+                        (Direccion, Cupo, IdTipoInmueble, Latitud, Longitud, PrecioPorDia, PorcentajeReserva, IdPropietario, Disponible)
+                        VALUES (@direccion, @cupo, @idTipo, @lat, @lon, @precio, @porcentaje, @idProp, @disponible);
                         SELECT LAST_INSERT_ID();";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@direccion", i.Direccion);
@@ -134,7 +134,6 @@ namespace InmobiliariaWeb.Repositorio
             command.Parameters.AddWithValue("@porcentaje", i.PorcentajeReserva);
             command.Parameters.AddWithValue("@idProp", i.IdPropietario);
             command.Parameters.AddWithValue("@disponible", i.Disponible);
-            command.Parameters.AddWithValue("@imagenBase64", (object?)i.ImagenBase64 ?? DBNull.Value);
             connection.Open();
             i.IdInmueble = Convert.ToInt32(command.ExecuteScalar());
             return i.IdInmueble;
@@ -146,8 +145,7 @@ namespace InmobiliariaWeb.Repositorio
             var sql = @"UPDATE Inmueble SET
                         Direccion = @direccion, Cupo = @cupo, IdTipoInmueble = @idTipo,
                         Latitud = @lat, Longitud = @lon, PrecioPorDia = @precio,
-                        PorcentajeReserva = @porcentaje, IdPropietario = @idProp, Disponible = @disponible,
-                        ImagenBase64 = @imagenBase64
+                        PorcentajeReserva = @porcentaje, IdPropietario = @idProp, Disponible = @disponible
                         WHERE IdInmueble = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@direccion", i.Direccion);
@@ -159,7 +157,6 @@ namespace InmobiliariaWeb.Repositorio
             command.Parameters.AddWithValue("@porcentaje", i.PorcentajeReserva);
             command.Parameters.AddWithValue("@idProp", i.IdPropietario);
             command.Parameters.AddWithValue("@disponible", i.Disponible);
-            command.Parameters.AddWithValue("@imagenBase64", (object?)i.ImagenBase64 ?? DBNull.Value);
             command.Parameters.AddWithValue("@id", i.IdInmueble);
             connection.Open();
             return command.ExecuteNonQuery();

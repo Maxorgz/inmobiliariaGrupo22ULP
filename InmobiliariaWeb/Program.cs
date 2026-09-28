@@ -24,6 +24,7 @@ builder.Services.AddScoped<IRepositorioInmueble, RepositorioInmueble>();
 builder.Services.AddScoped<IRepositorioReserva, RepositorioReserva>();
 builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>(); 
 builder.Services.AddScoped<IRepositorioPago, RepositorioPago>();
+builder.Services.AddScoped<IRepositorioImagen, RepositorioImagen>();
 
 var app = builder.Build();
 var defaultCulture = new System.Globalization.CultureInfo("es-AR");
