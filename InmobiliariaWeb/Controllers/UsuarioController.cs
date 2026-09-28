@@ -5,16 +5,29 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using InmobiliariaWeb.Models;
 using InmobiliariaWeb.Repositorio;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace InmobiliariaWeb.Controllers
 {
     public class UsuarioController : Controller
     {
         private readonly IRepositorioUsuario _repositorioUsuario;
+        private readonly IConfiguration _config;
 
-        public UsuarioController(IRepositorioUsuario repositorioUsuario)
+        public UsuarioController(IRepositorioUsuario repositorioUsuario, IConfiguration config)
         {
             _repositorioUsuario = repositorioUsuario;
+            _config = config;
+        }
+
+        private string HashearClave(string clave)
+        {
+            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: clave,
+                salt: System.Text.Encoding.ASCII.GetBytes(_config["Salt"] ?? ""),
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
         }
 
         //gestion usuario
@@ -41,6 +54,7 @@ namespace InmobiliariaWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    usuario.Clave = HashearClave(usuario.Clave); 
                     _repositorioUsuario.Alta(usuario);
                     return RedirectToAction(nameof(Index));
                 }
@@ -128,7 +142,7 @@ namespace InmobiliariaWeb.Controllers
             {
                 var usuario = _repositorioUsuario.ObtenerPorEmail(Email);
 
-                if (usuario == null || usuario.Clave != Clave)
+                if (usuario == null || usuario.Clave != HashearClave(Clave ?? ""))
                 {
                     ViewBag.Error = "Email o contraseña incorrectos.";
                     return View();
