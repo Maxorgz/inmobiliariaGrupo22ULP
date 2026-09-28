@@ -69,7 +69,9 @@ CREATE TABLE IF NOT EXISTS Usuario (
 );
 
 INSERT INTO Usuario (Nombre, Apellido, Email, Clave, Rol)
-VALUES ('Admin', 'Principal', 'admin@inmobiliaria.com', 'admin123', 1)
+VALUES 
+('Admin', 'Principal', 'admin@inmobiliaria.com', 'MgBlCNtvcaZhXV7brpLy9tCYbd/1Qiu4rG6HG/5aybs=', 1)
+('Empleado', 'Prueba', 'empleado@inmobiliaria.com', 'Abfz4dl5gopn9c/Q+LQUXuoBt4WF3fDWWk2B82463wM=', 2)
 ON DUPLICATE KEY UPDATE Email = Email;
 
 CREATE TABLE IF NOT EXISTS Pago (
