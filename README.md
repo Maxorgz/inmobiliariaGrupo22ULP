@@ -78,3 +78,13 @@ Antes de ejecutar el proyecto, asegúrate de contar con el siguiente software in
 A continuación se presenta el Diagrama Entidad-Relación (DER) / Diagrama de Clases correspondiente a la aplicación:
 
 ![Diagrama del Proyecto](./diagrama/inmobiliariagrupo22.png)
+
+El script SQL tiene dos usuarios para probar los roles del sistema. Podes ingresar con las siguientes credenciales:
+
+* **Administrador** (Acceso total al sistema y gestión de usuarios)
+  * **Email:** `admin@inmobiliaria.com`
+  * **Contraseña:** `Admin123!`
+
+* **Empleado** (Acceso restringido, gestión de entidades y perfil propio)
+  * **Email:** `empleado@inmobiliaria.com`
+  * **Contraseña:** `Empleado123!`
