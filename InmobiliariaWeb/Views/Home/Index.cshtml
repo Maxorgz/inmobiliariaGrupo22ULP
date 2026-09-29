@@ -60,25 +60,25 @@
         </div>
 
         <div class="col-md-5">
-            
+
             <div class="card h-100 shadow-sm border-0 transition-hover bg-light">
-                    <div class="card-body text-center p-4 d-flex flex-column">
-                        <div class="display-4 mb-3 text-info"><i class="bi bi-people"></i></div>
-                        <h3 class="card-title text-dark">Inquilinos</h3>
-                        <p class="card-text text-secondary mb-4">
-                            Gestion de Inquilinos, tel de contacto y direcciones de correo.
-                        </p>
-                        <a asp-controller="Inquilino" asp-action="Index" class="btn btn-outline-info mt-auto px-4">
-                            Ir a Inquilinos
-                        </a>
-                    </div>
+                <div class="card-body text-center p-4 d-flex flex-column">
+                    <div class="display-4 mb-3 text-info"><i class="bi bi-people"></i></div>
+                    <h3 class="card-title text-dark">Inquilinos</h3>
+                    <p class="card-text text-secondary mb-4">
+                        Gestion de Inquilinos, tel de contacto y direcciones de correo.
+                    </p>
+                    <a asp-controller="Inquilino" asp-action="Index" class="btn btn-outline-info mt-auto px-4">
+                        Ir a Inquilinos
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <hr class="my-5 text-muted">
+    <hr class="my-5 text-muted">
 
-        <div id="app-catalogo" v-cloak>
+    <div id="app-catalogo" v-cloak>
             <div class="text-center mb-4">
                 <h2 class="fw-bold text-primary"><i class="bi bi-search"></i> Catálogo de Inmuebles</h2>
                 <p class="text-muted">Búsqueda rápida en tiempo real</p>
@@ -106,84 +106,99 @@
                 <h5 class="mt-3 text-muted">Cargando propiedades...</h5>
             </div>
 
+            <!-- resultados -->
             <div class="row position-relative">
                 <transition-group name="tarjetas-animadas">
-                    <div class="col-md-4 mb-4" v-for="inmueble in inmueblesFiltrados" :key="inmueble.idInmueble">
+                    <div class="col-md-4 mb-4" v-for="inmueble in inmuebles" :key="inmueble.idInmueble || inmueble.IdInmueble">
                         <div class="card h-100 shadow-sm border-0 bg-white transition-hover">
+                            
+                            <!-- imagen -->
+                            <img v-if="inmueble.RutaImagen || inmueble.rutaImagen" 
+                                 :src="inmueble.RutaImagen || inmueble.rutaImagen" 
+                                 class="card-img-top" 
+                                 alt="Foto del Inmueble" 
+                                 style="height: 220px; object-fit: cover;">
+                            
+                            <div v-else class="card-img-top bg-secondary d-flex justify-content-center align-items-center text-white" style="height: 220px;">
+                                <i class="bi bi-house fs-1"></i>
+                            </div>
+
+                            <!-- inmueble -->
                             <div class="card-body">
-                                <span class="badge bg-info mb-2 fs-6">{{ inmueble.tipoInmuebleDescripcion || 'Inmueble'
-                                    }}</span>
-                                    <h4 class="card-title fw-bold">{{ inmueble.direccion }}</h4>
-                                    <hr>
-                                    <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <span class="fs-4 text-success fw-bold">${{ inmueble.precioPorDia }}</span>
-                                        <a :href="`/Reserva/Create?idInmueble=${inmueble.idInmueble}`"
-                                           class="btn btn-sm btn-primary">Reservar</a>
-                                    </div>
+                                <span class="badge bg-info mb-2 fs-6">{{ inmueble.tipoInmuebleDescripcion || inmueble.TipoInmuebleDescripcion || 'Inmueble' }}</span>
+                                <h4 class="card-title fw-bold">{{ inmueble.direccion || inmueble.Direccion }}</h4>
+                                <hr>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <span class="fs-4 text-success fw-bold">${{ inmueble.precioPorDia || inmueble.PrecioPorDia }}</span>
+                                    <a :href="`/Reserva/Create?idInmueble=${inmueble.idInmueble || inmueble.IdInmueble}`"
+                                       class="btn btn-sm btn-primary">Reservar</a>
                                 </div>
                             </div>
                         </div>
-                    </transition-group>
-                </div>
+                    </div>
+                </transition-group>
+            </div>
 
-                <div v-if="inmueblesFiltrados.length === 0 && !cargando" class="text-center py-5">
-                    <h3 class="text-muted">No encontramos inmuebles con esos filtros.</h3>
-                </div>
+            <div v-if="inmuebles.length === 0 && !cargando" class="text-center py-5">
+                <h3 class="text-muted">No encontramos inmuebles con esos filtros.</h3>
             </div>
         </div>
 
-        @section Scripts {
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script>
-        const { createApp, ref, computed, onMounted } = Vue;
+    @section Scripts {
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script>
+            const { createApp, ref, onMounted, watch } = Vue;
 
-        createApp({
+            createApp({
             setup() {
-                const inmuebles = ref([]);
-                const cargando = ref(true);
-                const busquedaTexto = ref('');
-                const precioMaximoFiltro = ref(100000);
-                const precioTopeAbsoluto = ref(100000);
+            const inmuebles = ref([]);
+            const cargando = ref(true);
+            const busquedaTexto = ref('');
+            const precioMaximoFiltro = ref(0); 
+            const precioTopeAbsoluto = ref(1000000);
+            let timeoutBusqueda = null;
+            let primeraCarga = true;
 
-                onMounted(async () => {
-                    try {
-                        const response = await fetch('/Inmueble/ObtenerCatalogoJson');
-                        const data = await response.json();
-                        inmuebles.value = data.datos || data.Datos; // Soporta "datos" o "Datos"
+            const buscarEnServidor = async () => {
+            cargando.value = true;
+            try {
+            const precioAEnviar = primeraCarga ? 0 : precioMaximoFiltro.value;
+                        const url = `/Inmueble/ObtenerCatalogoJson?busqueda=${encodeURIComponent(busquedaTexto.value)}&precioMaximo=${precioAEnviar}`;
                         
-                        if (inmuebles.value.length > 0) {
-                            const maxPrecio = Math.max(...inmuebles.value.map(i => i.PrecioPorDia || i.precioPorDia || 0));
-                            precioTopeAbsoluto.value = maxPrecio;
-                            precioMaximoFiltro.value = maxPrecio;
-                        }
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        inmuebles.value = data.datos || data.Datos || [];
                     } catch (error) {
                         console.error('Error cargando el catalogo:', error);
                     } finally {
                         cargando.value = false;
                     }
+                };
+
+                onMounted(async () => {
+                    await buscarEnServidor();
+                    
+                    if (inmuebles.value.length > 0) {
+                        const maxPrecio = Math.max(...inmuebles.value.map(i => i.PrecioPorDia || i.precioPorDia || 0));
+                        precioTopeAbsoluto.value = maxPrecio;
+                        precioMaximoFiltro.value = maxPrecio; 
+                    }
+                    primeraCarga = false; 
                 });
 
-                const inmueblesFiltrados = computed(() => {
-                    return inmuebles.value.filter(inmueble => {
-                        const dir = inmueble.Direccion || inmueble.direccion || '';
-                        const tipo = inmueble.TipoInmuebleDescripcion || inmueble.tipoInmuebleDescripcion || '';
-                        const precio = inmueble.PrecioPorDia || inmueble.precioPorDia || 0;
-
-                        const coincideTexto = busquedaTexto.value === '' || 
-                            dir.toLowerCase().includes(busquedaTexto.value.toLowerCase()) ||
-                            tipo.toLowerCase().includes(busquedaTexto.value.toLowerCase());
-                            
-                        const coincidePrecio = precio <= precioMaximoFiltro.value;
-                        
-                        return coincideTexto && coincidePrecio;
-                    });
+                watch([busquedaTexto, precioMaximoFiltro], () => {
+                    if (primeraCarga) return; 
+                    
+                    if(timeoutBusqueda) clearTimeout(timeoutBusqueda);
+                    timeoutBusqueda = setTimeout(() => {
+                        buscarEnServidor();
+                    }, 500);
                 });
 
                 return {
-                    inmuebles, cargando, busquedaTexto, precioMaximoFiltro, 
-                    precioTopeAbsoluto, inmueblesFiltrados
+                    inmuebles, cargando, busquedaTexto, precioMaximoFiltro, precioTopeAbsoluto
                 };
             }
         }).mount('#app-catalogo');
     </script>
-}
+    }

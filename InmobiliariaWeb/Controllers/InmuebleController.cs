@@ -85,20 +85,51 @@ namespace InmobiliariaWeb.Controllers
             return Json(new { Datos = res });
         }
 
-        [HttpGet]
         [AllowAnonymous]
-        public IActionResult ObtenerCatalogoJson()
+        [HttpGet]
+        public IActionResult ObtenerCatalogoJson(string? busqueda = null, decimal? precioMaximo = null)
         {
-            var inmuebles = repositorio.ObtenerTodos();
-            foreach(var inmueble in inmuebles)
+            try
             {
-                var imagenes = repoImagen.BuscarPorInmueble(inmueble.IdInmueble);
-                if(imagenes.Any())
+                var inmuebles = repositorio.ObtenerTodos();
+                var query = inmuebles.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(busqueda))
                 {
-                    inmueble.RutaImagen = imagenes.First().Url;
+                    var filtro = busqueda.ToLower();
+                    query = query.Where(i =>
+                        (i.Direccion != null && i.Direccion.ToLower().Contains(filtro)) ||
+                        (i.TipoInmuebleDescripcion != null && i.TipoInmuebleDescripcion.ToLower().Contains(filtro))
+                    );
                 }
+
+                if (precioMaximo.HasValue && precioMaximo.Value > 0)
+                {
+                    query = query.Where(i => i.PrecioPorDia <= precioMaximo.Value);
+                }
+
+                var inmueblesFiltrados = query.ToList();
+
+                var resultado = inmueblesFiltrados.Select(i =>
+                {
+                    var imagenes = repoImagen.BuscarPorInmueble(i.IdInmueble) as IEnumerable<Imagen>; ;
+                    var rutaPrincipal = imagenes?.FirstOrDefault()?.Url ?? "";
+
+                    return new
+                    {
+                        i.IdInmueble,
+                        i.Direccion,
+                        i.PrecioPorDia,
+                        TipoInmuebleDescripcion = i.TipoInmuebleDescripcion ?? "Inmueble",
+                        RutaImagen = rutaPrincipal
+                    };
+                });
+
+                return Json(new { Datos = resultado });
             }
-            return Json(new { datos = inmuebles });
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
         }
 
         [Authorize(Roles = "Administrador")]

@@ -20,18 +20,21 @@
                             @for (int i = 0; i < imagenes.Count; i++)
                             {
                                 <div class="carousel-item @(i == 0 ? "active" : "")">
-                                    <img src="@imagenes[i].Url" class="d-block w-100" style="max-height: 400px; object-fit: cover;" alt="Foto Inmueble">
+                                    <img src="@imagenes[i].Url" class="d-block w-100"
+                                         style="max-height: 400px; object-fit: cover;" alt="Foto Inmueble">
                                 </div>
                             }
                         </div>
-                        
+
                         @if (imagenes.Count > 1)
                         {
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carruselInmueble" data-bs-slide="prev">
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carruselInmueble"
+                                    data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
                                 <span class="visually-hidden">Anterior</span>
                             </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carruselInmueble" data-bs-slide="next">
+                            <button class="carousel-control-next" type="button" data-bs-target="#carruselInmueble"
+                                    data-bs-slide="next">
                                 <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
                                 <span class="visually-hidden">Siguiente</span>
                             </button>
