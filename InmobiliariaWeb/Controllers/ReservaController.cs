@@ -72,6 +72,7 @@ namespace InmobiliariaWeb.Controllers
             return Json(new { Datos = res });
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
@@ -81,6 +82,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create(Reserva entidad)
         {
             try
@@ -149,6 +151,7 @@ namespace InmobiliariaWeb.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
@@ -160,8 +163,9 @@ namespace InmobiliariaWeb.Controllers
             return View(entidad);
         }
 
-       [HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int id, Reserva entidad)
         {
             try
@@ -213,6 +217,7 @@ namespace InmobiliariaWeb.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
@@ -222,6 +227,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult DeleteConfirmed(int id)
         {
             try

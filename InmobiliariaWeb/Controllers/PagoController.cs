@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaWeb.Models;
 using InmobiliariaWeb.Repositorio;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaWeb.Controllers
 {
+    [Authorize]
     public class PagoController : Controller
     {
         private readonly IRepositorioPago repositorio;
@@ -48,6 +50,7 @@ namespace InmobiliariaWeb.Controllers
             return View(entidad);
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create(int idReserva)
         {
             var reserva = repoReserva.ObtenerPorId(idReserva);
@@ -60,6 +63,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create(Pago entidad)
         {
             try
@@ -79,6 +83,7 @@ namespace InmobiliariaWeb.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
@@ -88,6 +93,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int id, Pago entidad)
         {
             try
@@ -116,6 +122,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Anular(int id)
         {
             var p = repositorio.ObtenerPorId(id);

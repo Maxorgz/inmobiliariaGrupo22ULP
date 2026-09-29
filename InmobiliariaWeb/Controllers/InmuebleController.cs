@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using InmobiliariaWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 using InmobiliariaWeb.Repositorio;
 
 namespace InmobiliariaWeb.Controllers
 {
+    [Authorize]
     public class InmuebleController : Controller
     {
         private readonly IRepositorioInmueble repositorio;
@@ -84,7 +86,7 @@ namespace InmobiliariaWeb.Controllers
         }
 
         [HttpGet]
-        [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+        [AllowAnonymous]
         public IActionResult ObtenerCatalogoJson()
         {
             var inmuebles = repositorio.ObtenerTodos();
@@ -99,6 +101,7 @@ namespace InmobiliariaWeb.Controllers
             return Json(new { datos = inmuebles });
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.Propietarios = repoPropietario.ObtenerTodos();
@@ -108,6 +111,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult> Create(Inmueble entidad)
         {
             try
@@ -159,7 +163,7 @@ namespace InmobiliariaWeb.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
@@ -170,8 +174,9 @@ namespace InmobiliariaWeb.Controllers
             return View(entidad);
         }
 
-       [HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult> Edit(int id, Inmueble entidad)
         {
             try
@@ -239,6 +244,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Suspender(int id)
         {
             repositorio.CambiarDisponibilidad(id, false);
@@ -248,6 +254,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Reactivar(int id)
         {
             repositorio.CambiarDisponibilidad(id, true);

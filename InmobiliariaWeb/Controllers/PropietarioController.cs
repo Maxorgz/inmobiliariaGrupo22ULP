@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace InmobiliariaWeb.Controllers
 {
+    [Authorize]
     public class PropietarioController : Controller
     {
         private readonly RepositorioPropietario _repoPropietario;
@@ -15,7 +16,6 @@ namespace InmobiliariaWeb.Controllers
         }
 
 
-        [Authorize]
         public IActionResult Index(int pagina = 1, int tamanio = 10)
         {
             if (tamanio != 5 && tamanio != 10 && tamanio != 20) tamanio = 10;
@@ -32,12 +32,14 @@ namespace InmobiliariaWeb.Controllers
             return View(propietarios);
         }
 
+        [Authorize(Roles = "Administrador")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Create(Propietario p)
         {
             if (ModelState.IsValid)
@@ -48,6 +50,7 @@ namespace InmobiliariaWeb.Controllers
             return View(p);
         }
 
+        [Authorize(Roles = "Administrador")]
         public IActionResult Edit(int id)
         {
             var propietario = _repoPropietario.ObtenerPorId(id);
@@ -59,6 +62,7 @@ namespace InmobiliariaWeb.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrador")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Propietario p)
         {
@@ -72,6 +76,7 @@ namespace InmobiliariaWeb.Controllers
             return View(p);
         }
 
+        [Authorize(Roles = "Administrador")]
         public IActionResult Delete(int id)
         {
             var propietario = _repoPropietario.ObtenerPorId(id);
@@ -84,6 +89,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public IActionResult DeleteConfirmado(int IdPropietario)
         {
             try

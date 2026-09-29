@@ -61,7 +61,7 @@ namespace InmobiliariaWeb.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "Administrador")] 
+        [Authorize(Roles = "Administrador")] 
         public ActionResult Eliminar(int id)
         {
             try

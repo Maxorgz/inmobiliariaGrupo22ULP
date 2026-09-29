@@ -83,8 +83,8 @@ El script SQL tiene dos usuarios para probar los roles del sistema. Podes ingres
 
 * **Administrador** (Acceso total al sistema y gestión de usuarios)
   * **Email:** `admin@inmobiliaria.com`
-  * **Contraseña:** `Admin123!`
+  * **Contraseña:** `admin123`
 
 * **Empleado** (Acceso restringido, gestión de entidades y perfil propio)
   * **Email:** `empleado@inmobiliaria.com`
-  * **Contraseña:** `Empleado123!`
+  * **Contraseña:** `empleado123`

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using InmobiliariaWeb.Models;
 using InmobiliariaWeb.Repositorio;
 
@@ -56,6 +57,7 @@ namespace InmobiliariaWeb.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             return View();
@@ -63,6 +65,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create(TipoInmueble entidad)
         {
             try
@@ -80,6 +83,7 @@ namespace InmobiliariaWeb.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
@@ -89,6 +93,7 @@ namespace InmobiliariaWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Edit(int id, TipoInmueble entidad)
         {
             try
