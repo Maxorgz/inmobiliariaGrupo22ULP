@@ -103,31 +103,19 @@ namespace InmobiliariaWeb.Repositorio
         {
             using var connection = new MySqlConnection(connectionString);
             var sql = @"UPDATE Usuario SET Nombre = @nombre, Apellido = @apellido, 
-                        Email = @email, Rol = @rol WHERE IdUsuario = @id";
+                        Email = @email, Clave = @clave, Rol = @rol, Avatar = @Avatar WHERE IdUsuario = @id";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@nombre", usuario.Nombre);
             command.Parameters.AddWithValue("@apellido", usuario.Apellido);
             command.Parameters.AddWithValue("@email", usuario.Email);
+            command.Parameters.AddWithValue("@clave", usuario.Clave);
             command.Parameters.AddWithValue("@rol", usuario.Rol);
+            command.Parameters.AddWithValue("@Avatar", string.IsNullOrEmpty(usuario.Avatar) ? DBNull.Value : usuario.Avatar);
             command.Parameters.AddWithValue("@id", usuario.IdUsuario);
             connection.Open();
             return command.ExecuteNonQuery();
         }
 
-        public int ModificarPerfil(Usuario usuario)
-        {
-            using var connection = new MySqlConnection(connectionString);
-            var sql = @"UPDATE Usuario SET Nombre = @nombre, Apellido = @apellido, 
-                        Clave = @clave, Avatar = @avatar WHERE IdUsuario = @id";
-            using var command = new MySqlCommand(sql, connection);
-            command.Parameters.AddWithValue("@nombre", usuario.Nombre);
-            command.Parameters.AddWithValue("@apellido", usuario.Apellido);
-            command.Parameters.AddWithValue("@clave", usuario.Clave);
-            command.Parameters.AddWithValue("@avatar", (object?)usuario.Avatar ?? DBNull.Value);
-            command.Parameters.AddWithValue("@id", usuario.IdUsuario);
-            connection.Open();
-            return command.ExecuteNonQuery();
-        }
 
         public int Baja(int id)
         {

@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace InmobiliariaWeb.Models
 {
@@ -33,5 +35,11 @@ namespace InmobiliariaWeb.Models
         public int Rol { get; set; } = (int)RolUsuario.Empleado;
 
         public string RolNombre => Rol == (int)RolUsuario.Administrador ? "Administrador" : "Empleado";
+        
+        [NotMapped]
+        public IFormFile? AvatarFile { get; set; }
+        
+        [NotMapped]
+        public string? ClaveNueva { get; set; }
     }
 }

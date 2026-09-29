@@ -1,0 +1,99 @@
+@model InmobiliariaWeb.Models.Usuario
+
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="container mt-4">
+    <h2><i class="bi bi-person-circle text-primary"></i> Mi Perfil</h2>
+    <hr />
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill"></i> @ViewBag.Error
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4 mb-4 text-center">
+            <div class="card shadow-sm p-3 border-0 bg-light">
+                <h5 class="card-title text-muted mb-3">Foto Actual</h5>
+                <div class="mb-3 d-flex justify-content-center">
+                    @if (!string.IsNullOrEmpty(Model.Avatar))
+                    {
+                        <img src="@Model.Avatar" alt="Avatar de @Model.Nombre" class="img-thumbnail rounded-circle shadow" style="width: 160px; height: 160px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex justify-content-center align-items-center bg-secondary text-white rounded-circle shadow" style="width: 160px; height: 160px;">
+                            <i class="bi bi-person" style="font-size: 5rem;"></i>
+                        </div>
+                    }
+                </div>
+                <h4 class="mb-0 fw-bold text-primary">@Model.Nombre @Model.Apellido</h4>
+                <p class="text-muted mb-2">@Model.Email</p>
+                <div>
+                    <span class="badge bg-info fs-6">@(Model.Rol == 1 ? "Administrador" : "Empleado")</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm border-top border-primary border-3">
+                <div class="card-body p-4">
+                    <form asp-action="Perfil" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="IdUsuario" />
+                        
+                        <h5 class="mb-3 text-primary"><i class="bi bi-card-text"></i> Datos Personales</h5>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 form-group">
+                                <label asp-for="Nombre" class="control-label fw-bold">Nombre</label>
+                                <input asp-for="Nombre" class="form-control" required />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label asp-for="Apellido" class="control-label fw-bold">Apellido</label>
+                                <input asp-for="Apellido" class="form-control" required />
+                                <span asp-validation-for="Apellido" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="control-label fw-bold">Correo Electronico (No editable)</label>
+                            <input asp-for="Email" class="form-control bg-light text-muted" readonly />
+                        </div>
+
+                        <h5 class="mb-3 text-primary border-top pt-4"><i class="bi bi-shield-lock"></i> Seguridad y Avatar</h5>
+
+                        <div class="form-group mb-3 p-3 bg-light border rounded">
+                            <label asp-for="ClaveNueva" class="control-label fw-bold">Cambiar Contraseña (Opcional)</label>
+                            <input asp-for="ClaveNueva" type="password" class="form-control" placeholder="Escribí tu nueva contraseña..." />
+                            <small class="form-text text-muted">Si dejás este campo vacío, tu contraseña actual no cambiará.</small>
+                            <span asp-validation-for="ClaveNueva" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4 p-3 bg-light border rounded">
+                            <label asp-for="AvatarFile" class="control-label fw-bold">Subir nueva Foto (Opcional)</label>
+                            <input asp-for="AvatarFile" type="file" accept="image/jpeg, image/png, image/webp" class="form-control" />
+                            <small class="form-text text-muted">Formatos aceptados: JPG, PNG, WEBP.</small>
+                        </div>
+
+                        <div class="form-group text-end mt-4">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary me-2">Volver al Inicio</a>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,7 +9,6 @@ namespace InmobiliariaWeb.Repositorio
         Usuario? ObtenerPorEmail(string email);
         int Alta(Usuario usuario);
         int Modificacion(Usuario usuario);
-        int ModificarPerfil(Usuario usuario);
         int Baja(int id);
     }
 }

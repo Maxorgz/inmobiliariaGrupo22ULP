@@ -35,6 +35,13 @@
                     <input asp-for="Email" class="form-control" type="email" required />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
+
+                <div class="form-group mb-3 p-3 bg-light border rounded">
+                    <label asp-for="Clave" class="control-label fw-bold">Cambiar Contraseña (Opcional)</label>
+                    <input asp-for="Clave" type="text" class="form-control" placeholder="Escribí una clave nueva o dejalo en blanco..." />
+                    <small class="form-text text-muted">al dejar este campo vacio, el usuario mantentiene su contraseña actual.</small>
+                    <span asp-validation-for="Clave" class="text-danger"></span>
+                </div>
                 
                 <div class="form-group mb-4">
                     <label asp-for="Rol" class="control-label">Rol en el Sistema</label>

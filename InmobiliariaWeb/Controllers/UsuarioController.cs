@@ -13,11 +13,13 @@ namespace InmobiliariaWeb.Controllers
     {
         private readonly IRepositorioUsuario _repositorioUsuario;
         private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _environment;
 
-        public UsuarioController(IRepositorioUsuario repositorioUsuario, IConfiguration config)
+        public UsuarioController(IRepositorioUsuario repositorioUsuario, IConfiguration config, IWebHostEnvironment environment)
         {
             _repositorioUsuario = repositorioUsuario;
             _config = config;
+            _environment = environment;
         }
 
         private string HashearClave(string clave)
@@ -28,6 +30,70 @@ namespace InmobiliariaWeb.Controllers
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
+        }
+
+        // gestion perfil ---
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult Perfil()
+        {
+            var idClaim = User.FindFirst("IdUsuario")?.Value;
+            if (idClaim == null) return RedirectToAction("Login");
+
+            int id = int.Parse(idClaim);
+            var usuario = _repositorioUsuario.ObtenerPorId(id);
+            return View(usuario);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Perfil(Usuario usuarioModificado)
+        {
+            try
+            {
+                var idClaim = User.FindFirst("IdUsuario")?.Value;
+                if (idClaim == null) return RedirectToAction("Login");
+                int id = int.Parse(idClaim);
+
+                var usuarioActual = _repositorioUsuario.ObtenerPorId(id);
+                if (usuarioActual == null) return NotFound();
+
+                usuarioActual.Nombre = usuarioModificado.Nombre;
+                usuarioActual.Apellido = usuarioModificado.Apellido;
+
+                if (!string.IsNullOrWhiteSpace(usuarioModificado.ClaveNueva))
+                {
+                    usuarioActual.Clave = HashearClave(usuarioModificado.ClaveNueva);
+                }
+
+                if (usuarioModificado.AvatarFile != null && usuarioModificado.AvatarFile.Length > 0)
+                {
+                    string uploadsFolder = Path.Combine(_environment.WebRootPath, "Uploads", "Avatares");
+                    if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+                    var extension = Path.GetExtension(usuarioModificado.AvatarFile.FileName);
+                    var nombreArchivo = $"avatar_{id}_{Guid.NewGuid()}{extension}";
+                    var rutaArchivo = Path.Combine(uploadsFolder, nombreArchivo);
+
+                    using (var stream = new FileStream(rutaArchivo, FileMode.Create))
+                    {
+                        await usuarioModificado.AvatarFile.CopyToAsync(stream);
+                    }
+
+                    usuarioActual.Avatar = $"/Uploads/Avatares/{nombreArchivo}";
+                }
+
+                _repositorioUsuario.Modificacion(usuarioActual);
+                TempData["Mensaje"] = "Perfil actualizado correctamente";
+                return RedirectToAction(nameof(Perfil));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                return View(usuarioModificado);
+            }
         }
 
         //gestion usuario
@@ -72,6 +138,7 @@ namespace InmobiliariaWeb.Controllers
         {
             var usuario = _repositorioUsuario.ObtenerPorId(id);
             if (usuario == null) return RedirectToAction(nameof(Index));
+            usuario.Clave = "";
             return View(usuario);
         }
 
