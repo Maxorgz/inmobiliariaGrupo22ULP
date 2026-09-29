@@ -13,5 +13,9 @@ namespace InmobiliariaWeb.Repositorio
         int Alta(Inmueble i);
         int Modificacion(Inmueble i);
         int CambiarDisponibilidad(int id, bool disponible);
+        IList<Inmueble> ObtenerTodosConDetalle(bool? disponible);
+        IList<Inmueble> ObtenerPorPropietario(int idPropietario);
+        IList<InformeInmuebleReservas> MasReservados(int dias);
+        IList<Inmueble> SinReservas(int dias);
     }
 }

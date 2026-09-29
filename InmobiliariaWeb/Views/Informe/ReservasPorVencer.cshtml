@@ -1,0 +1,35 @@
+@model IEnumerable<InmobiliariaWeb.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Reservas por vencer";
+}
+
+<div class="container mt-4">
+    <h2>Reservas que terminan próximamente</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">Volver a Informes</a>
+
+    <form method="get" class="mb-3 d-flex gap-2">
+        <select name="dias" class="form-select" style="max-width:220px" onchange="this.form.submit()">
+            <option value="7" selected="@(ViewBag.Dias == 7)">Próximos 7 días</option>
+            <option value="15" selected="@(ViewBag.Dias == 15)">Próximos 15 días</option>
+            <option value="30" selected="@(ViewBag.Dias == 30)">Próximos 30 días</option>
+        </select>
+    </form>
+
+    <table class="table table-striped">
+        <thead><tr><th>Inquilino</th><th>Inmueble</th><th>Fecha de fin</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@(r.Inquilino != null ? $"{r.Inquilino.Nombre} {r.Inquilino.Apellido}" : $"ID {r.IdInquilino}")</td>
+                <td>@(r.Inmueble != null ? r.Inmueble.Direccion : $"ID {r.IdInmueble}")</td>
+                <td>@r.FechaHasta.ToShortDateString()</td>
+                <td>
+                    <a asp-controller="Reserva" asp-action="Details" asp-route-id="@r.IdReserva" class="btn btn-sm btn-info">Ver</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

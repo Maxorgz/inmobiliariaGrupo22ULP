@@ -1,0 +1,31 @@
+@model IEnumerable<InmobiliariaWeb.Models.Inmueble>
+    
+@{
+    ViewData["Title"] = "Inmuebles sin reservas";
+}
+
+<div class="container mt-4">
+    <h2>Inmuebles sin reservas</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">Volver a Informes</a>
+
+    <form method="get" class="mb-3 d-flex gap-2">
+        <select name="dias" class="form-select" style="max-width:220px" onchange="this.form.submit()">
+            <option value="30" selected="@(ViewBag.Dias == 30)">Últimos 30 días</option>
+            <option value="60" selected="@(ViewBag.Dias == 60)">Últimos 60 días</option>
+            <option value="90" selected="@(ViewBag.Dias == 90)">Últimos 90 días</option>
+        </select>
+    </form>
+
+    <table class="table table-striped">
+        <thead><tr><th>Dirección</th><th>Propietario</th></tr></thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>@i.Direccion</td>
+                    <td>@i.PropietarioNombreCompleto</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

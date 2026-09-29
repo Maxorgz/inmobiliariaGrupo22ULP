@@ -145,5 +145,39 @@ namespace InmobiliariaWeb.Repositorio
             return command.ExecuteNonQuery();
         }
 
+        public IList<Reserva> ObtenerVigentes()
+        {
+            var lista = new List<Reserva>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = SelectBase + @"
+                WHERE r.FechaDesde <= @hoy
+                AND r.FechaHasta >= @hoy
+                AND r.FechaTerminacionAnticipada IS NULL
+                ORDER BY r.FechaHasta";
+            using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@hoy", DateTime.Today);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read()) lista.Add(Mapear(reader));
+            return lista;
+        }
+
+        public IList<Reserva> ObtenerPorVencer(int dias)
+        {
+            var lista = new List<Reserva>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = SelectBase + @"
+                WHERE r.FechaTerminacionAnticipada IS NULL
+                AND r.FechaHasta BETWEEN @hoy AND @limite
+                ORDER BY r.FechaHasta";
+            using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@hoy", DateTime.Today);
+            command.Parameters.AddWithValue("@limite", DateTime.Today.AddDays(dias));
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read()) lista.Add(Mapear(reader));
+            return lista;
+        }
+
     }
 }

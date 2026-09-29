@@ -1,0 +1,39 @@
+@model IEnumerable<InmobiliariaWeb.Models.Inmueble>
+    
+@{
+    ViewData["Title"] = "Inmuebles por propietario";
+}
+
+<div class="container mt-4">
+    <h2>Inmuebles por propietario</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">Volver a Informes</a>
+
+    <form method="get" class="mb-3 d-flex gap-2">
+        <select name="idPropietario" class="form-select" style="max-width:300px" onchange="this.form.submit()">
+            <option value="">Seleccione un propietario...</option>
+            @foreach (var p in ViewBag.Propietarios)
+            {
+                <option value="@p.IdPropietario" selected="@(ViewBag.IdPropietario == p.IdPropietario)">
+                    @p.Nombre @p.Apellido
+                </option>
+            }
+        </select>
+    </form>
+
+    @if (Model.Any())
+    {
+        <table class="table table-striped">
+            <thead><tr><th>Dirección</th><th>Tipo</th><th>Disponible</th></tr></thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    <tr>
+                        <td>@i.Direccion</td>
+                        <td>@i.TipoInmuebleDescripcion</td>
+                        <td>@(i.Disponible ? "Sí" : "No")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

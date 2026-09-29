@@ -172,5 +172,85 @@ namespace InmobiliariaWeb.Repositorio
             connection.Open();
             return command.ExecuteNonQuery();
         }
+
+        public IList<Inmueble> ObtenerTodosConDetalle(bool? disponible)
+        {
+            var lista = new List<Inmueble>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = SelectBase;
+            if (disponible.HasValue)
+                sql += " WHERE i.Disponible = @disponible";
+            sql += " ORDER BY i.Direccion";
+            using var command = new MySqlCommand(sql, connection);
+            if (disponible.HasValue)
+                command.Parameters.AddWithValue("@disponible", disponible.Value);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read()) lista.Add(Mapear(reader));
+            return lista;
+        }
+
+        public IList<Inmueble> ObtenerPorPropietario(int idPropietario)
+        {
+            var lista = new List<Inmueble>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = SelectBase + " WHERE i.IdPropietario = @idPropietario ORDER BY i.Direccion";
+            using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@idPropietario", idPropietario);
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read()) lista.Add(Mapear(reader));
+            return lista;
+        }
+
+        public IList<InformeInmuebleReservas> MasReservados(int dias)
+        {
+            var lista = new List<InformeInmuebleReservas>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = @"
+                SELECT i.IdInmueble, i.Direccion,
+                    p.Nombre AS PropNombre, p.Apellido AS PropApellido,
+                    COUNT(r.IdReserva) AS Cantidad
+                FROM Inmueble i
+                INNER JOIN Propietario p ON i.IdPropietario = p.IdPropietario
+                LEFT JOIN Reserva r ON r.IdInmueble = i.IdInmueble AND r.FechaDesde >= @desde
+                GROUP BY i.IdInmueble, i.Direccion, p.Nombre, p.Apellido
+                HAVING Cantidad > 0
+                ORDER BY Cantidad DESC";
+            using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@desde", DateTime.Today.AddDays(-dias));
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                lista.Add(new InformeInmuebleReservas
+                {
+                    IdInmueble = reader.GetInt32("IdInmueble"),
+                    Direccion = reader.GetString("Direccion"),
+                    PropietarioNombreCompleto = $"{reader.GetString("PropNombre")} {reader.GetString("PropApellido")}",
+                    CantidadReservas = reader.GetInt32("Cantidad"),
+                });
+            }
+            return lista;
+        }
+
+        public IList<Inmueble> SinReservas(int dias)
+        {
+            var lista = new List<Inmueble>();
+            using var connection = new MySqlConnection(connectionString);
+            var sql = SelectBase + @"
+                WHERE i.IdInmueble NOT IN (
+                    SELECT r.IdInmueble FROM Reserva r WHERE r.FechaDesde >= @desde
+                )
+                ORDER BY i.Direccion";
+            using var command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@desde", DateTime.Today.AddDays(-dias));
+            connection.Open();
+            using var reader = command.ExecuteReader();
+            while (reader.Read()) lista.Add(Mapear(reader));
+            return lista;
+        }
+
     }
+    
 }

@@ -1,0 +1,38 @@
+@model IEnumerable<InmobiliariaWeb.Models.Inmueble>
+@{
+    ViewData["Title"] = "Inmuebles disponibles entre fechas";
+}
+
+<div class="container mt-4">
+    <h2>Inmuebles disponibles entre dos fechas</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">Volver a Informes</a>
+
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-auto">
+            <input type="date" name="desde" class="form-control" value="@(ViewBag.Desde as DateTime?)?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-auto">
+            <input type="date" name="hasta" class="form-control" value="@(ViewBag.Hasta as DateTime?)?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
+    @if (Model.Any())
+    {
+        <table class="table table-striped">
+            <thead><tr><th>Dirección</th><th>Tipo</th><th>Precio/día</th></tr></thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    <tr>
+                        <td>@i.Direccion</td>
+                        <td>@i.TipoInmuebleDescripcion</td>
+                        <td>$@i.PrecioPorDia</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -78,6 +78,14 @@
                                             <i class="bi bi-person-badge text-primary me-2"></i> Mi Perfil
                                         </a>
                                     </li>
+                                    @if (User.IsInRole("Administrador"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item py-2" asp-controller="Informe" asp-action="Index">
+                                                <i class="bi bi-clipboard-data text-primary me-2"></i> Informes
+                                            </a>
+                                        </li>
+                                    }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item py-2 text-danger" asp-controller="Usuario" asp-action="Logout">

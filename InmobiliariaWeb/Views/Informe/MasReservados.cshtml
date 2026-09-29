@@ -1,0 +1,24 @@
+@model IEnumerable<InmobiliariaWeb.Models.InformeInmuebleReservas>
+    
+@{
+    ViewData["Title"] = "Inmuebles más reservados";
+}
+
+<div class="container mt-4">
+    <h2>Inmuebles más reservados (últimos 365 días)</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-3">Volver a Informes</a>
+
+    <table class="table table-striped">
+        <thead><tr><th>Dirección</th><th>Propietario</th><th>Cantidad de reservas</th></tr></thead>
+        <tbody>
+            @foreach (var i in Model)
+            {
+                <tr>
+                    <td>@i.Direccion</td>
+                    <td>@i.PropietarioNombreCompleto</td>
+                    <td>@i.CantidadReservas</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

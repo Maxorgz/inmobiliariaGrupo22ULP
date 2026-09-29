@@ -11,5 +11,7 @@ namespace InmobiliariaWeb.Repositorio
         int Alta(Reserva r);
         int Baja(int id);
         int Modificacion(Reserva r);
+        IList<Reserva> ObtenerVigentes();
+        IList<Reserva> ObtenerPorVencer(int dias);
     }
 }
