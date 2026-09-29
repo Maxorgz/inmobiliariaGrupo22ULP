@@ -66,8 +66,6 @@ namespace InmobiliariaWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Propietario p)
         {
-            ModelState.Remove("Clave");
-
             if (ModelState.IsValid)
             {
                 _repoPropietario.Modificacion(p);

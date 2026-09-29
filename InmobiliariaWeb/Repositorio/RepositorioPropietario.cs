@@ -22,7 +22,6 @@ namespace InmobiliariaWeb.Repositorio
                         ORDER BY IdPropietario
                         LIMIT @tamanio OFFSET @offset";
             
-//          var sql = "SELECT IdPropietario, Nombre, Apellido, Dni, Telefono, Email, IsActive FROM Propietario";
             using var command = new MySqlCommand(sql, connection);
                 
             command.Parameters.AddWithValue("@tamanio", tamanio);
@@ -130,8 +129,8 @@ namespace InmobiliariaWeb.Repositorio
         public int Alta(Propietario p)
         {
             using var connection = new MySqlConnection(connectionString);
-            var sql = @"INSERT INTO Propietario (Nombre, Apellido, Dni, Telefono, Email, Clave)
-                        VALUES (@nombre, @apellido, @dni, @telefono, @email, @clave);
+            var sql = @"INSERT INTO Propietario (Nombre, Apellido, Dni, Telefono, Email)
+                        VALUES (@nombre, @apellido, @dni, @telefono, @email);
                         SELECT LAST_INSERT_ID();";
             using var command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@nombre", p.Nombre);
@@ -139,7 +138,6 @@ namespace InmobiliariaWeb.Repositorio
             command.Parameters.AddWithValue("@dni", p.Dni);
             command.Parameters.AddWithValue("@telefono", (object?)p.Telefono ?? DBNull.Value);
             command.Parameters.AddWithValue("@email", p.Email);
-            command.Parameters.AddWithValue("@clave", p.Clave);
             connection.Open();
             p.IdPropietario = Convert.ToInt32(command.ExecuteScalar());
             return p.IdPropietario;
@@ -157,7 +155,6 @@ namespace InmobiliariaWeb.Repositorio
             command.Parameters.AddWithValue("@telefono", (object?)p.Telefono ?? DBNull.Value);
             command.Parameters.AddWithValue("@email", p.Email);
             command.Parameters.AddWithValue("@id", p.IdPropietario);
-            //command.Parameters.AddWithValue("@clave", p.Clave);
             connection.Open();
             return command.ExecuteNonQuery();
         }
