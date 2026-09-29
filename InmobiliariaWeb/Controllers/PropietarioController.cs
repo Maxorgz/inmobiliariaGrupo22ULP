@@ -100,5 +100,36 @@ namespace InmobiliariaWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+        public IActionResult BuscarPropietariosAjax(string q)
+        {
+            try
+            {
+                var propietarios = _repoPropietario.ObtenerTodos();
+
+                if (!string.IsNullOrWhiteSpace(q))
+                {
+                    var queryText = q.ToLower();
+                    propietarios = propietarios.Where(p =>
+                        (p.Nombre != null && p.Nombre.ToLower().Contains(queryText)) ||
+                        (p.Apellido != null && p.Apellido.ToLower().Contains(queryText)) ||
+                        (p.Dni != null && p.Dni.Contains(queryText))
+                    ).ToList();
+                }
+
+                var resultados = propietarios.Take(15).Select(p => new
+                {
+                    id = p.IdPropietario,
+                    text = $"{p.Nombre} {p.Apellido} (DNI: {p.Dni})"
+                });
+
+                return Json(resultados);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

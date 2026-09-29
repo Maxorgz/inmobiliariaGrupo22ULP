@@ -102,5 +102,31 @@ namespace InmobiliariaWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+        [HttpGet]
+        public IActionResult BuscarInquilinosAjax(string q)
+        {
+            try
+            {
+                IList<Inquilino> inquilinos = new List<Inquilino>();
+                
+                if (!string.IsNullOrWhiteSpace(q))
+                {
+                    inquilinos = _repoInquilino.BuscarPorNombre(q);
+                }
+
+                var resultados = inquilinos.Select(i => new {
+                    id = i.IdInquilino,
+                    text = $"{i.Nombre} {i.Apellido} (DNI: {i.Dni})"
+                });
+
+                return Json(resultados);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

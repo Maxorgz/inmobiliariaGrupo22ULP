@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <h2>Crear Nueva Reserva</h2>
     <hr />
-    
+
     @if (!ViewData.ModelState.IsValid)
     {
         <div class="alert alert-danger">
@@ -18,31 +18,23 @@
     <div class="row">
         <div class="col-md-6">
             <form asp-action="Create" method="post">
-                
+
                 <div class="form-group mb-3">
                     <label asp-for="IdInquilino" class="control-label">Inquilino</label>
-                    <select asp-for="IdInquilino" class="form-select" required>
-                        <option value="">Seleccione un inquilino...</option>
-                        @foreach (var inq in ViewBag.Inquilinos)
-                        {
-                            <option value="@inq.IdInquilino">@inq.Nombre @inq.Apellido (DNI: @inq.Dni)</option>
-                        }
+                    <select asp-for="IdInquilino" class="form-select select2-ajax" required>
+                        <option value="">Escriba para buscar un inquilino...</option>
                     </select>
                     <span asp-validation-for="IdInquilino" class="text-danger"></span>
                 </div>
-                
+
                 <div class="form-group mb-3">
                     <label asp-for="IdInmueble" class="control-label">Inmueble</label>
-                    <select asp-for="IdInmueble" class="form-select" required>
-                        <option value="">Seleccione un inmueble...</option>
-                        @foreach (var inm in ViewBag.Inmuebles)
-                        {
-                            <option value="@inm.IdInmueble">@inm.Direccion (Cupo: @inm.Cupo)</option>
-                        }
+                    <select asp-for="IdInmueble" class="form-select select2-inmueble" required>
+                        <option value="">Escriba la dirección...</option>
                     </select>
                     <span asp-validation-for="IdInmueble" class="text-danger"></span>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-3">
@@ -59,7 +51,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Guardar Reserva</button>
                     <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
@@ -68,3 +60,45 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <!-- Importa Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+        $('.select2-ajax').select2({
+        placeholder: 'Buscar inquilino...',
+        minimumInputLength: 2,
+        ajax: {
+        url: '/Inquilino/BuscarInquilinosAjax',
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+        return { q: params.term };
+        },
+        processResults: function (data) {
+        return { results: data };
+        }
+        }
+        });
+        });
+
+        $('.select2-inmueble').select2({
+        placeholder: 'Buscar direccion del inmueble...',
+        minimumInputLength: 3,
+        ajax: {
+        url: '/Inmueble/BuscarInmueblesAjax',
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+        return { q: params.term };
+        },
+        processResults: function (data) {
+        return { results: data };
+        }
+        }
+        });
+    </script>
+}

@@ -1,34 +1,81 @@
 @{
-    ViewData["Title"] = "Informes";
+    ViewData["Title"] = "Panel de Informes";
 }
 
-<div class="container mt-4">
-    <h2><i class="bi bi-clipboard-data"></i> Informes</h2>
-    <hr />
-    <div class="list-group">
-        <a asp-action="Inmuebles" class="list-group-item list-group-item-action">
-            Inmuebles y su propietario
-        </a>
-        <a asp-action="InmueblesPorPropietario" class="list-group-item list-group-item-action">
-            Inmuebles de un propietario específico
-        </a>
-        <a asp-action="MasReservados" class="list-group-item list-group-item-action">
-            Inmuebles más reservados (últimos 365 días)
-        </a>
-        <a asp-action="SinReservas" class="list-group-item list-group-item-action">
-            Inmuebles sin reservas en los últimos X días
-        </a>
-        <a asp-action="ReservasVigentes" class="list-group-item list-group-item-action">
-            Reservas vigentes
-        </a>
-        <a asp-action="ReservasPorVencer" class="list-group-item list-group-item-action">
-            Reservas que terminan en los próximos X días
-        </a>
-        <a asp-action="InmueblesDisponibles" class="list-group-item list-group-item-action">
-            Inmuebles disponibles entre dos fechas
-        </a>
-        <a asp-action="PagosPorReserva" class="list-group-item list-group-item-action">
-            Pagos de una reserva
-        </a>
+<style>
+    .hover-link {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+    .hover-link:hover {
+        background-color: #f8f9fa;
+        border-left: 4px solid #18bc9c;
+        padding-left: 1.5rem !important;
+    }
+    .card-header {
+        letter-spacing: 0.5px;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary"><i class="bi bi-clipboard-data"></i> Centro de Informes</h1>
+        <p class="text-muted">Estadisticas y consultas de la inmobiliaria</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="bi bi-building"></i> Gestión de Inmuebles
+                </div>
+                <div class="list-group list-group-flush">
+                    <a asp-action="Inmuebles" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-houses text-secondary me-2"></i> General y Propietarios
+                    </a>
+                    <a asp-action="InmueblesPorPropietario" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-person-lines-fill text-secondary me-2"></i> Por Propietario Específico
+                    </a>
+                    <a asp-action="InmueblesDisponibles" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-calendar-check text-secondary me-2"></i> Disponibles entre Fechas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-info text-white fw-bold">
+                    <i class="bi bi-calendar-range"></i> Estado de Reservas
+                </div>
+                <div class="list-group list-group-flush">
+                    <a asp-action="ReservasVigentes" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-bookmark-check text-secondary me-2"></i> Reservas Vigentes
+                    </a>
+                    <a asp-action="ReservasPorVencer" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-hourglass-split text-secondary me-2"></i> Próximas a Vencer
+                    </a>
+                    <a asp-action="MasReservados" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-graph-up-arrow text-secondary me-2"></i> Más Reservados (Top)
+                    </a>
+                    <a asp-action="SinReservas" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-graph-down-arrow text-secondary me-2"></i> Sin Reservas Recientes
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="bi bi-cash-coin"></i> Finanzas y Pagos
+                </div>
+                <div class="list-group list-group-flush">
+                    <a asp-action="PagosPorReserva" class="list-group-item list-group-item-action hover-link py-3">
+                        <i class="bi bi-receipt text-secondary me-2"></i> Historial de Pagos por Reserva
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

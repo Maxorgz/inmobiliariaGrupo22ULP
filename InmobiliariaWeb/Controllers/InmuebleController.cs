@@ -234,7 +234,7 @@ namespace InmobiliariaWeb.Controllers
                 i.PrecioPorDia = entidad.PrecioPorDia;
                 i.PorcentajeReserva = entidad.PorcentajeReserva;
                 i.IdPropietario = entidad.IdPropietario;
-                
+
                 repositorio.Modificacion(i);
 
                 if (entidad.ArchivoImagen != null && entidad.ArchivoImagen.Length > 0)
@@ -250,7 +250,7 @@ namespace InmobiliariaWeb.Controllers
                     {
                         await entidad.ArchivoImagen.CopyToAsync(stream);
                     }
-                    
+
                     Imagen img = new Imagen
                     {
                         IdInmueble = id,
@@ -292,5 +292,34 @@ namespace InmobiliariaWeb.Controllers
             TempData["Mensaje"] = "Inmueble reactivado en la oferta";
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public IActionResult BuscarInmueblesAjax(string q)
+        {
+            try
+            {
+                IList<Inmueble> inmuebles = new List<Inmueble>();
+                if (!string.IsNullOrWhiteSpace(q))
+                {
+                    inmuebles = repositorio.BuscarPorDireccion(q);
+                }
+
+                var resultados = inmuebles.Select(i => new
+                {
+                    id = i.IdInmueble,
+                    text = $"{i.Direccion} (Tipo: {i.TipoInmuebleDescripcion})"
+                });
+
+                return Json(resultados);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+
     }
 }

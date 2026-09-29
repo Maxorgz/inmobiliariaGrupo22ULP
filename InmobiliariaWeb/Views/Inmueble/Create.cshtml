@@ -23,16 +23,10 @@
                 <div class="row mb-3">
                     <div class="col-md-6 form-group">
                         <label asp-for="IdPropietario" class="control-label fw-bold">Propietario</label>
-                        <select asp-for="IdPropietario" class="form-select" required>
-                            <option value="">Seleccione un propietario...</option>
-                            @if(ViewBag.Propietarios != null)
-                            {
-                                foreach (var prop in ViewBag.Propietarios)
-                                {
-                                    <option value="@prop.IdPropietario">@prop.Nombre @prop.Apellido</option>
-                                }
-                            }
+                        <select asp-for="IdPropietario" class="form-select select2-propietario" required>
+                            <option value="">Escriba para buscar...</option>
                         </select>
+                        <span asp-validation-for="IdPropietario" class="text-danger"></span>
                     </div>
                     
                     <div class="col-md-6 form-group">
@@ -95,3 +89,31 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <!-- Importamos Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.select2-propietario').select2({
+                placeholder: 'Buscar por nombre, apellido o DNI...',
+                minimumInputLength: 2,
+                ajax: {
+                    url: '/Propietario/BuscarPropietariosAjax',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { q: params.term };
+                    },
+                    processResults: function (data) {
+                        return { results: data };
+                    }
+                }
+            });
+
+            $('.select2-basico').select2();
+        });
+    </script>
+}
